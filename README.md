@@ -40,6 +40,7 @@ ArcAngelGPT can perform a variety of tasks, including:
 3. Identify its operating system and system specifications:
     - ArcAngelGPT can recognize the operating system it is running on and provide details about the system's hardware and software specifications.
 
+## Coming soon
 4. Read and write files:
     - ArcAngelGPT can read from existing files, create new files, and write content to them.
 
