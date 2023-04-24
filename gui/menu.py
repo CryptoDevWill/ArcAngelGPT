@@ -6,7 +6,7 @@ from screens.details_screen import DetailsScreen
 class Menu:
     def __init__(self, master):
         self.master = master
-        master.title("Arc Angel Ai")
+        master.title("Arc Angel GPT")
 
         # Create a Notebook widget
         self.notebook = ttk.Notebook(master)
