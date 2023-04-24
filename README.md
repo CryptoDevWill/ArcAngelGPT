@@ -24,7 +24,7 @@ Follow these steps to set up and run ArcAngelGPT on your local machine.
 1. Change into the working directory:
 ```cd ArcAngelGPT```
 2. Start the program:
-```python3 main.py```
+```python main.py```
 ArcAngelGPT should now be running and ready for use.
 
 ## Usage
