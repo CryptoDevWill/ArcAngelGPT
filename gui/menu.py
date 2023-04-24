@@ -3,7 +3,7 @@ from tkinter import ttk
 from screens.chat_screen import ChatScreen
 from screens.details_screen import DetailsScreen
 
-class MainMenu:
+class Menu:
     def __init__(self, master):
         self.master = master
         master.title("Arc Angel Ai")
