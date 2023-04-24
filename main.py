@@ -1,6 +1,6 @@
 import tkinter as tk
 from gui.gui import GUI
-from menu.main_menu import MainMenu
+from gui.main_menu import MainMenu
 
 
 class ArcAngelGPT:
