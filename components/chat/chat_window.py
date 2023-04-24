@@ -2,16 +2,8 @@
 import tkinter as tk
 from tkinter import ttk
 from components.chat.chat_send import user_response
-import os
-import platform
-import subprocess
 
 
-directory_path = os.getcwd()
-
-# Get files and folders in the working directory
-result = subprocess.run(["ls"], capture_output=True, text=True)
-files_and_folders = result.stdout.strip()
 
 class ChatWindow:
     def __init__(self, master):
@@ -32,15 +24,7 @@ class ChatWindow:
         input_field.pack(side='left', fill='x', expand=True)
 
         # Send button
-        submit_button = ttk.Button(frame, text="Send", style="C.TButton", command=lambda: user_response(input_field, self.chat_window, self.master, self.conversation))
+        submit_button = ttk.Button(frame, text="Send", style="C.TButton", command=lambda: user_response(input_field, self.chat_window, self.master))
         submit_button.pack(side='right')
 
-    conversation = [
-            {
-                "role": "system",
-                "content": "You are an AI assistant that can execute command-line terminal prompts. "
-                "This is your directory path: " + directory_path
-                + "\n\nThese are the files and folders in your working directory:\n" + files_and_folders
-                + "\n\nThese are your system details: os.name - " + os.name + ", platform.system() - " + platform.system(),
-            }
-        ]
+   
