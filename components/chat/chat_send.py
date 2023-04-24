@@ -7,29 +7,50 @@ import subprocess
 
 load_dotenv()
 
-directory_path = os.getcwd()
+working_directory_path = os.getcwd()
 
 # Get files and folders in the working directory
-result = subprocess.run(["ls"], capture_output=True, text=True)
-files_and_folders = result.stdout.strip()
-
+files_and_folders = os.system("ls")
 home_dir = os.path.expanduser("~")
-print(home_dir)
-
 username = os.getlogin()
-print(username)
+
+def list_files_as_tree():
+    def get_tree(startpath):
+        exclude = set(['.git', '__pycache__'])  # Exclude .git and __pycache__ directories
+        
+        tree = ''
+        for root, dirs, files in os.walk(startpath):
+            dirs[:] = [d for d in dirs if d not in exclude]
+            
+            level = root.replace(startpath, '').count(os.sep)
+            indent = ' ' * 4 * (level)
+            tree += f"{indent}{os.path.basename(root)}/"
+            subindent = ' ' * 4 * (level + 1)
+            for file in files:
+                tree += f"{subindent}{file}"
+        return tree
+
+    # Get the current working directory and list its files and folders as a tree
+    cwd = os.getcwd()
+    files_and_folders_tree = get_tree(cwd)
+    
+    return files_and_folders_tree
+
+
+
+file_tree = list_files_as_tree()
 
 
 conversation = [
             {
                 "role": "system",
-                "content": "You are an AI assistant that can execute command-line terminal prompts. "
-                "This is your directory path: " + directory_path
-                + "\n\nThese are the files and folders in your working directory:\n" + files_and_folders
-                + "\n\nThese are your system details: os.name - " + os.name + ", platform.system() - " + platform.system(),
+                "content": "You are an AI computer server assistant. " + 
+                "Your username is " + username +
+                ". Your home directory is " + home_dir +
+                ". Your working directory is " + working_directory_path +
+                ". The files and folders in your working directory are " + file_tree
             }
         ]
-
 
 def user_response(input_field, chat_window, master):
     prompt = input_field.get('1.0', 'end-1c')
