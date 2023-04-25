@@ -15,8 +15,7 @@ Follow these steps to set up and run ArcAngelGPT on your local machine.
 ```cd ArcAngelGPT```
 3. Install the required Python packages:
 ```pip install -r requirements.txt```
-4. Open the `.env.template` file and replace `OPENAI_API_KEY` with your OpenAI API key:
-```OPENAI_API_KEY=your_api_key_here```
+4. Open the `.env.template` file and replace `OPENAI_API_KEY=your_api_key_here`
 5. Rename the `.env.template` file to `.env`
 
 ### Running ArcAngelGPT
