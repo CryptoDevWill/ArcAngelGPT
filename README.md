@@ -30,6 +30,14 @@ Here's a list of the main contributors to this project, along with their profile
       </a><br />
       Developer
     </td>
+    <td align="center">
+      <a href="https://github.com/cschladetsch">
+        <img src="https://avatars.githubusercontent.com/cschladetsch" width="100px;" alt="cschladetsch"/>
+        <br />
+        <sub><b>cschladetsch</b></sub>
+      </a><br />
+      Developer
+    </td>
   </tr>
 </table>
 
