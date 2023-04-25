@@ -12,7 +12,7 @@ Here's a list of the main contributors to this project, along with their profile
         <br />
         <sub><b>CryptoDevWill</b></sub>
       </a><br />
-      Project lead and developer
+      Developer
     </td>
     <td align="center">
       <a href="https://github.com/1advent">
