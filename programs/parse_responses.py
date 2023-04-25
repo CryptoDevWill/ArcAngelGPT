@@ -54,14 +54,12 @@ def parse_code(match):
             function_name = function_match.group(1)
         else:
             function_name = "new_program"
-        print(function_name)
         language_pattern = r"(\w+)\n" # pattern to match language in backticks
         language_match = re.search(language_pattern, code_block)
         if language_match:
             language = language_match.group(1).lower() # get the language and convert to lowercase
             file_extension = programming_languages.get(language, "txt") # get the file extension from the programming_languages dict, default to "txt"
             file_name = f"{function_name}.{file_extension}"
-            print(file_name)
             save_code_block(code_block, file_name)
 
 
