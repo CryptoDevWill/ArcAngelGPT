@@ -20,7 +20,15 @@ Here's a list of the main contributors to this project, along with their profile
         <br />
         <sub><b>1advent</b></sub>
       </a><br />
-      AI integration and testing
+      Developer
+    </td>
+    <td align="center">
+      <a href="https://github.com/virtualzx-nad">
+        <img src="https://avatars.githubusercontent.com/virtualzx-nad" width="100px;" alt="virtualzx-nad"/>
+        <br />
+        <sub><b>virtualzx-nad</b></sub>
+      </a><br />
+      Developer
     </td>
   </tr>
 </table>
