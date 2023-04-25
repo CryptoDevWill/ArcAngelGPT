@@ -52,25 +52,25 @@ def parse_code(match):
         function_match = re.search(function_pattern, code_block)
         if function_match:
             function_name = function_match.group(1)
-            language_pattern = r"(\w+)\n" # pattern to match language in backticks
-            language_match = re.search(language_pattern, code_block)
-            if language_match:
-                language = language_match.group(1).lower() # get the language and convert to lowercase
-                file_extension = programming_languages.get(language, "txt") # get the file extension from the programming_languages dict, default to "txt"
-                file_name = f"{function_name}.{file_extension}"
-                save_code_block(code_block, file_name)
+        else:
+            function_name = "new_program"
+        print(function_name)
+        language_pattern = r"(\w+)\n" # pattern to match language in backticks
+        language_match = re.search(language_pattern, code_block)
+        if language_match:
+            language = language_match.group(1).lower() # get the language and convert to lowercase
+            file_extension = programming_languages.get(language, "txt") # get the file extension from the programming_languages dict, default to "txt"
+            file_name = f"{function_name}.{file_extension}"
+            print(file_name)
+            save_code_block(code_block, file_name)
 
 
 
 def save_code_block(code_block, file_name):
-    function_pattern = r"def\s+(\w+)\("
-    function_match = re.search(function_pattern, code_block)
-    if function_match:
-        function_name = function_match.group(1)
-        save_dir = "./user_scripts"
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-        file_path = os.path.join(save_dir, file_name)
-        with open(file_path, "w") as f:
-            f.write(code_block)
-            print(f"Code block saved to {file_path}")
+    save_dir = "./user_scripts"
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    file_path = os.path.join(save_dir, file_name)
+    with open(file_path, "w") as f:
+        f.write(code_block)
+        print(f"Code block saved to {file_path}")
