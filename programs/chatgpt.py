@@ -35,7 +35,7 @@ def ChatGPT(conversation):
         if result:
             conversation.append({ "role": "assistant", "content": result })
 
-        return "Task complete"
+        return response
     except openai.error.AuthenticationError as e:
         error_message = str(e)
         print(f"Error: {error_message}")
