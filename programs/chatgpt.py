@@ -25,7 +25,6 @@ def ChatGPT(conversation):
                 code_block = match.group(1)
                 function_pattern = r"def\s+(\w+)\("
                 function_match = re.search(function_pattern, code_block)
-                print(function_match)
                 if function_match:
                     function_name = function_match.group(1)
                     file_name = f"{function_name}.py"
