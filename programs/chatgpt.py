@@ -31,11 +31,11 @@ def ChatGPT(conversation):
                 elif command == "touch":
                     result = _touch(argument)
                 break
-
+            else:
+                return response    
         if result:
             conversation.append({ "role": "assistant", "content": result })
-
-        return response
+            return result
     except openai.error.AuthenticationError as e:
         error_message = str(e)
         print(f"Error: {error_message}")
