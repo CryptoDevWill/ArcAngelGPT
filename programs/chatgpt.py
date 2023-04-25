@@ -2,7 +2,9 @@
 import openai
 import os
 import re
+from programs.parse_responses import *
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -19,16 +21,10 @@ def ChatGPT(conversation):
         )
         response = completion.choices[0].message.content
         if response:
-            pattern = r"```python\n(.*?)```"
+            pattern = r"```(.*?)```"
             match = re.search(pattern, response, re.DOTALL)
             if match:
-                code_block = match.group(1)
-                function_pattern = r"def\s+(\w+)\("
-                function_match = re.search(function_pattern, code_block)
-                if function_match:
-                    function_name = function_match.group(1)
-                    file_name = f"{function_name}.py"
-                    save_code_block(code_block, file_name)
+                parse_code(match)
             conversation.append({ "role": "assistant", "content": response })
         result = None
         for command in commands:
@@ -64,15 +60,3 @@ def _touch(file_name):
     else:
         return f"Error creating file '{file_name}': {os.strerror(exit_code)}"
         
-def save_code_block(code_block, file_name):
-    function_pattern = r"def\s+(\w+)\("
-    function_match = re.search(function_pattern, code_block)
-    if function_match:
-        function_name = function_match.group(1)
-        save_dir = "./user_scripts"
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
-        file_path = os.path.join(save_dir, file_name)
-        with open(file_path, "w") as f:
-            f.write(code_block)
-            print(f"Code block saved to {file_path}")
