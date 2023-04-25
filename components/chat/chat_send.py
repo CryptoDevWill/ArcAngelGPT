@@ -12,7 +12,10 @@ working_directory_path = os.getcwd()
 # Get files and folders in the working directory
 files_and_folders = os.system("ls")
 home_dir = os.path.expanduser("~")
-username = os.getlogin()
+try:
+    username = os.environ['USERNAME']
+except:
+    username = os.environ['USER']
 
 def list_files_as_tree():
     def get_tree(startpath):

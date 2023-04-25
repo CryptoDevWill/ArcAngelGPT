@@ -1,9 +1,6 @@
-# chat_window.py
 import tkinter as tk
 from tkinter import ttk
 from components.chat.chat_send import user_response
-
-
 
 class ChatWindow:
     def __init__(self, master):
@@ -14,7 +11,6 @@ class ChatWindow:
 
         self.chat_window.tag_configure('user', background='#141414', spacing1=10, spacing2=10, spacing3=10)
         self.chat_window.tag_configure('assistant', background='#2b2b2b', spacing1=10, spacing2=10, spacing3=10)
-
 
         frame = tk.Frame(master, padx=5, pady=5)
         frame.pack(side='bottom', fill='x')
@@ -27,4 +23,9 @@ class ChatWindow:
         submit_button = ttk.Button(frame, text="Send", style="C.TButton", command=lambda: user_response(input_field, self.chat_window, self.master))
         submit_button.pack(side='right')
 
-   
+        # Function to handle Return key event
+        def on_return_key(event):
+            user_response(input_field, self.chat_window, self.master)
+
+        # Bind the Return key to the input_field
+        input_field.bind('<Return>', on_return_key)
