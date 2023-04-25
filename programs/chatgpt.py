@@ -21,9 +21,10 @@ def ChatGPT(conversation):
         )
         response = completion.choices[0].message.content
         if response:
-            pattern = r"```python\n(.*?)```"
+            pattern = r"```(.*?)```"
             match = re.search(pattern, response, re.DOTALL)
-            parse_python_code(match)
+            if match:
+                parse_code(match)
             conversation.append({ "role": "assistant", "content": response })
         result = None
         for command in commands:
