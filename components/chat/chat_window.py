@@ -16,16 +16,22 @@ class ChatWindow:
         frame.pack(side='bottom', fill='x')
 
         # Textfield input
-        input_field = tk.Text(frame, height=2, bd=0, bg='#1b1d1c', highlightthickness=0, font=('Helvetica', 15), fg='#ffffff', pady=5, padx=5)
+        input_field = tk.Text(frame, height=1, bd=0, bg='#1b1d1c', highlightthickness=0, font=('Helvetica', 15), fg='#ffffff', pady=5, padx=5)
         input_field.pack(side='left', fill='x', expand=True)
 
-        # Send button
-        submit_button = ttk.Button(frame, text="Send", style="C.TButton", command=lambda: user_response(input_field, self.chat_window, self.master))
-        submit_button.pack(side='right')
+        # Function to check if input field is empty
+        def is_input_empty(input_field):
+            return len(input_field.get('1.0', 'end-1c').strip()) == 0
 
-        # Function to handle Return key event
+        # Modified function to handle Return key event
         def on_return_key(event):
-            user_response(input_field, self.chat_window, self.master)
+            if not is_input_empty(input_field):
+                user_response(input_field, self.chat_window, self.master)
+            return 'break'
+
+        # Send button
+        submit_button = ttk.Button(frame, text="Send", style="C.TButton", command=lambda: on_return_key(None))
+        submit_button.pack(side='right')
 
         # Bind the Return key to the input_field
         input_field.bind('<Return>', on_return_key)
