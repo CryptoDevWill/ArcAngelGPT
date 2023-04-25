@@ -2,7 +2,9 @@
 import openai
 import os
 import re
+from programs.parse_responses import *
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -18,8 +20,12 @@ def ChatGPT(conversation):
             messages=conversation
         )
         response = completion.choices[0].message.content
-        conversation.append({ "role": "assistant", "content": response })
-
+        if response:
+            pattern = r"```(.*?)```"
+            match = re.search(pattern, response, re.DOTALL)
+            if match:
+                parse_code(match)
+            conversation.append({ "role": "assistant", "content": response })
         result = None
         for command in commands:
             regex = rf'{command} (\S+)'
@@ -32,10 +38,8 @@ def ChatGPT(conversation):
                     result = _touch(argument)
                 break
             else:
-                return response    
-        if result:
-            conversation.append({ "role": "assistant", "content": result })
-            return result
+                return response
+        return result    
     except openai.error.AuthenticationError as e:
         error_message = str(e)
         print(f"Error: {error_message}")
@@ -55,3 +59,4 @@ def _touch(file_name):
         return f"File '{file_name}' has been created successfully."
     else:
         return f"Error creating file '{file_name}': {os.strerror(exit_code)}"
+        
