@@ -16,7 +16,7 @@ class ChatWindow:
         frame.pack(side='bottom', fill='x')
 
         # Textfield input
-        input_field = tk.Text(frame, height=2, bd=0, bg='#1b1d1c', highlightthickness=0, font=('Helvetica', 15), pady=5, padx=5)
+        input_field = tk.Text(frame, height=2, bd=0, bg='#1b1d1c', highlightthickness=0, font=('Helvetica', 15), fg='#ffffff', pady=5, padx=5)
         input_field.pack(side='left', fill='x', expand=True)
 
         # Send button
