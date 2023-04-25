@@ -10,15 +10,14 @@ Follow these steps to set up and run ArcAngelGPT on your local machine.
 
 ### Installation
 1. Clone the GitHub repository:
-```git clone https://github.com/yourusername/ArcAngelGPT.git```
+```git clone https://github.com/CryptoDevWill/ArcAngelGPT.git```
 2. Change into the cloned directory:
 ```cd ArcAngelGPT```
 3. Install the required Python packages:
 ```pip install -r requirements.txt```
 4. Open the `.env.template` file and replace `OPENAI_API_KEY` with your OpenAI API key:
 ```OPENAI_API_KEY=your_api_key_here```
-5. Rename the `.env.template` file to `.env`:
-```mv .env.template .env```
+5. Rename the `.env.template` file to `.env`
 
 ### Running ArcAngelGPT
 1. Change into the working directory:
