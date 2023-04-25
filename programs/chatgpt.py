@@ -63,7 +63,7 @@ def _touch(file_name):
         return f"File '{file_name}' has been created successfully."
     else:
         return f"Error creating file '{file_name}': {os.strerror(exit_code)}"
-    
+        
 def save_code_block(code_block, file_name):
     function_pattern = r"def\s+(\w+)\("
     function_match = re.search(function_pattern, code_block)
