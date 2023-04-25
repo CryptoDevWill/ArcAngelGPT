@@ -40,6 +40,7 @@ def ChatGPT(conversation):
         error_message = str(e)
         print(f"Error: {error_message}")
         return error_message
+        
 
 def _mkdir(directory_name):
     exit_code = os.system(f'mkdir {directory_name}')
