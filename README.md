@@ -1,6 +1,32 @@
 # ArcAngelGPT
 ArcAngelGPT is an AI agent powered by GPT-3.5-turbo, designed to assist you in various tasks and conversations.
 
+## Contributors
+Here's a list of the main contributors to this project, along with their profile images:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/CryptoDevWill">
+        <img src="https://avatars.githubusercontent.com/CryptoDevWill" width="100px;" alt="CryptoDevWill"/>
+        <br />
+        <sub><b>CryptoDevWill</b></sub>
+      </a><br />
+      Project lead and developer
+    </td>
+    <td align="center">
+      <a href="https://github.com/1advent">
+        <img src="https://avatars.githubusercontent.com/1advent" width="100px;" alt="1advent"/>
+        <br />
+        <sub><b>1advent</b></sub>
+      </a><br />
+      AI integration and testing
+    </td>
+  </tr>
+</table>
+
+Thank you to everyone who has contributed to this project!
+
 ## Getting Started
 Follow these steps to set up and run ArcAngelGPT on your local machine.
 
