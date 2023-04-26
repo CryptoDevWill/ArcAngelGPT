@@ -5,6 +5,7 @@ from data.conversation import conversation
 from dotenv import load_dotenv
 from data.global_variables import work_mode
 from functions.play_sound import play_sound
+from functions.speak import speak
 import os
 import re
 import json
@@ -15,6 +16,7 @@ load_dotenv()
 
 # Assitant response
 def assistant_response(chat_window):
+    work_mode.get()
     if work_mode.get():
         work_response(chat_window)
     else:
@@ -25,18 +27,20 @@ def assistant_response(chat_window):
         )
         response = completion.choices[0].message.content
         if '`' in response:
-            work_mode.set(True)
+            conversation.append({"role": "assistant", "content": "Okay i'll start working on that now!"})
+            chat_window.update_conversation()
+            play_sound("response")
             work_response(chat_window, response)
         else:
             conversation.append({"role": "assistant", "content": response})
             chat_window.update_conversation()
             play_sound("response")
+            speak(response)
 
 
 
 # Enter work mode
 def work_response(chat_window, response):
-    play_sound('work')
     working_directory_path = os.getcwd()
     prompt = ('Your current working directory is ' + working_directory_path + '. '
             'You are an autonomous terminal AI that only outputs an array string of ALL the steps needed to complete the instructions in order. '
@@ -44,7 +48,13 @@ def work_response(chat_window, response):
             'Use only the following commands: "touch", "mkdir", "rm", and "echo". Construct file paths to achieve the desired outcome without changing directories, opening files, or directly editing files. '
             '### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. '
             '### Here are the instructions: ' + response)
+    
+    work_mode.set(True)
+    conversation.append({"role": "system", "content": "Entering work mode"})
     chat_window.update_conversation()
+    play_sound('work')
+
+    # Ask openai to complete request using Completion Function
     openai.api_key = os.environ.get("OPENAI_API_KEY")
     completion = openai.Completion.create(
         model="text-davinci-003",
@@ -64,24 +74,27 @@ def work_response(chat_window, response):
         try:
             tasks = json.loads(task_array)
             if isinstance(tasks, list) and all(isinstance(task, dict) for task in tasks):
-                execute_response(tasks)
+                execute_response(tasks, chat_window)
             else:
                 raise ValueError("The response is not a valid array.")
         except Exception as e:
-            print(f"Work mode exited due to error: {e}")
-            conversation.append({"role": "assistant", "content": "Work mode exited due to error."})
             work_mode.set(False)
+            print(f"Work mode exited due to error: {e}")
+            conversation.append({"role": "system", "content": "Work mode exited due to error."})
             chat_window.update_conversation()
+            play_sound("error")
     else:
-        print("Work mode exited due to error: No array found in the response.")
-        conversation.append({"role": "assistant", "content": "Work mode exited due to error: No array found in the response."})
         work_mode.set(False)
+        print("Work mode exited due to error: No array found in the response.")
+        conversation.append({"role": "system", "content": "Work mode exited due to error: No array found in the response."})
         chat_window.update_conversation()
+        play_sound("error")
 
 
 # Execute the commands
-def execute_response(task_array):
-    work_mode.set(False)
+def execute_response(task_array, chat_window):
     for task in task_array:
-        execute_command(task['command'])
+        execute_command(task['command'], chat_window)
+    work_mode.set(False)
     play_sound("success")
+    assistant_response(chat_window)

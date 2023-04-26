@@ -2,7 +2,7 @@ import os
 import openai
 from data.conversation import conversation
 from functions.play_sound import play_sound
-
+from functions.speak import speak
 
 def _init(chat_window):
     openai.api_key = os.environ.get("OPENAI_API_KEY")
@@ -14,3 +14,4 @@ def _init(chat_window):
     conversation.append({"role": "assistant", "content": response})
     chat_window.update_conversation()
     play_sound("response")
+    speak(response)

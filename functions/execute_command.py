@@ -7,11 +7,12 @@ def update_terminal_output(terminal, output):
     if terminal is not None:
         terminal.update_output(output + '\n')
 
-def execute_command(command):
+def execute_command(command, chat_window):
     # Output to terminal
     terminal = Terminal.instance()
     update_terminal_output(terminal, f"Executing command: " + command)
     conversation.append({"role": "system", "content": f"Executing command: {command}"})
+    chat_window.update_conversation()
 
     try:
         # Run the command in a shell environment
@@ -24,6 +25,7 @@ def execute_command(command):
 
         # Append the error message to the conversation as a system message
         conversation.append({"role": "system", "content": error_message})
+        chat_window.update_conversation()
         return error_message
     else:
         # Output to terminal
@@ -38,4 +40,5 @@ def execute_command(command):
 
             # Append the successful command message to the conversation as a system message
             conversation.append({"role": "system", "content": success_message})
+            chat_window.update_conversation()
             return success_message
