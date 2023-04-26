@@ -61,6 +61,6 @@ conversation = [
         ". Your system architecture is " + architecture +
         ". Your processor is " + processor +
         f". You have {memory:.2f} GB of RAM and {disk_usage:.2f} GB of total disk space." +
-        " Your primary task is to help break down projects into tasks and execute terminal commands to complete them."
+        " Your primary task is to help break down projects into tasks and execute terminal commands to complete them. Your responses are short and precise"
     }
 ]
