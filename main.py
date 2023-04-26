@@ -1,7 +1,7 @@
 import tkinter as tk
 from gui.gui import GUI
 from gui.menu import Menu
-
+from components.chat.user_response import UserResponse
 
 class ArcAngelGPT:
     def __init__(self):
