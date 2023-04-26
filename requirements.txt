@@ -13,3 +13,4 @@ requests==2.28.2
 tqdm==4.65.0
 urllib3==1.26.15
 yarl==1.9.1
+psutil==5.9.5

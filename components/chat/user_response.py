@@ -1,6 +1,9 @@
 import tkinter as tk
-from data.global_variables import conversation
+from data.conversation import conversation
 from functions.execute_command import execute_command
+from components.chat.assistant_response import assistant_response
+
+
 class UserResponse:
     def __init__(self, master):
         self.master = master
@@ -11,7 +14,6 @@ class UserResponse:
 
     def user_response(self, event):
         input_text = self.user_input.get()
-        execute_command(input_text)
         conversation.append({"role": "user", "content": input_text})
-        print(conversation)
+        assistant_response()
         self.user_input.delete(0, 'end')

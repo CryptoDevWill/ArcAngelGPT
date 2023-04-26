@@ -1,7 +1,7 @@
 import subprocess
 import shlex
 from components.terminal.terminal import Terminal
-from data.global_variables import conversation
+from data.conversation import conversation
 
 def update_terminal_output(terminal, output):
     if terminal is not None:
