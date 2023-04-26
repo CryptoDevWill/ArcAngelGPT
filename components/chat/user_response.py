@@ -2,7 +2,7 @@ import threading
 import tkinter as tk
 from data.conversation import conversation
 from components.chat.assistant_response import assistant_response
-
+from functions.play_sound import play_sound
 class UserResponse:
     def __init__(self, master, chat_window):
         self.master = master
@@ -17,6 +17,7 @@ class UserResponse:
         conversation.append({"role": "user", "content": input_text})
         self.chat_window.update_conversation()
         self.user_input.delete(0, 'end')
+        play_sound('send')
         # Run assistant_response() in a separate thread
         threading.Thread(target=self.run_assistant_response).start()
 

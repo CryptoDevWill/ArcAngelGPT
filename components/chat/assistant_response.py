@@ -4,6 +4,7 @@ import os
 from data.conversation import conversation
 from dotenv import load_dotenv
 from data.global_variables import work_mode
+from functions.play_sound import play_sound
 import os
 import re
 import json
@@ -21,17 +22,17 @@ def assistant_response(chat_window):
             messages=conversation
         )
         response = completion.choices[0].message.content
-        print(response)
         if '`' in response:
             work_mode.set(True)
             work_response(chat_window, response)
         else:
-            print(response)
             conversation.append({"role": "assistant", "content": response})
             chat_window.update_conversation()
+            play_sound("response")
 
 
 def work_response(chat_window, response):
+    play_sound('work')
     working_directory_path = os.getcwd()
     prompt = ('Your current working directory is ' + working_directory_path + '. '
             'You are an autonomous terminal AI that only outputs an array string of ALL the steps needed to complete the instructions in order. '
@@ -80,3 +81,4 @@ def execute_response(task_array):
     work_mode.set(False)
     for task in task_array:
         execute_command(task['command'])
+    play_sound("success")
