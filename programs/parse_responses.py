@@ -48,19 +48,30 @@ programming_languages = {
 def parse_code(match):
     if match:
         code_block = match.group(1)
+        
+        # Find the function name
         function_pattern = r"def\s+(\w+)\("
         function_match = re.search(function_pattern, code_block)
         if function_match:
             function_name = function_match.group(1)
         else:
             function_name = "new_program"
+        
+        # Find the language and file extension
         language_pattern = r"(\w+)\n" # pattern to match language in backticks
         language_match = re.search(language_pattern, code_block)
         if language_match:
             language = language_match.group(1).lower() # get the language and convert to lowercase
             file_extension = programming_languages.get(language, "txt") # get the file extension from the programming_languages dict, default to "txt"
-            file_name = f"{function_name}.{file_extension}"
-            save_code_block(code_block, file_name)
+            code_without_language = re.sub(language_pattern, "", code_block, count=1) # remove the language specifier from the code block
+        else:
+            file_extension = "txt"
+            code_without_language = code_block
+        
+        # Save the code to a file
+        file_name = f"{function_name}.{file_extension}"
+        save_code_block(code_without_language, file_name)
+
 
 
 
