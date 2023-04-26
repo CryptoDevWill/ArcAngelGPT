@@ -12,6 +12,8 @@ import json
 from functions.execute_command import execute_command
 load_dotenv()
 
+
+# Assitant response
 def assistant_response(chat_window):
     if work_mode.get():
         work_response(chat_window)
@@ -31,6 +33,8 @@ def assistant_response(chat_window):
             play_sound("response")
 
 
+
+# Enter work mode
 def work_response(chat_window, response):
     play_sound('work')
     working_directory_path = os.getcwd()
@@ -40,9 +44,6 @@ def work_response(chat_window, response):
             'Use only the following commands: "touch", "mkdir", "rm", and "echo". Construct file paths to achieve the desired outcome without changing directories, opening files, or directly editing files. '
             '### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. '
             '### Here are the instructions: ' + response)
-
-
-
     chat_window.update_conversation()
     openai.api_key = os.environ.get("OPENAI_API_KEY")
     completion = openai.Completion.create(
@@ -77,6 +78,8 @@ def work_response(chat_window, response):
         work_mode.set(False)
         chat_window.update_conversation()
 
+
+# Execute the commands
 def execute_response(task_array):
     work_mode.set(False)
     for task in task_array:
