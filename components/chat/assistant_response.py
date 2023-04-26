@@ -33,7 +33,12 @@ def assistant_response(chat_window):
 
 def work_response(chat_window, response):
     working_directory_path = os.getcwd()
-    prompt = 'Your current working directory is ' + working_directory_path + '.  You are an autonomous terminal AI that only outputs an array string and nothing else of ALL the steps needed to complete the instructions in order. (Do not "cd", "open" nor "save") you can not "cd", "open", nor "save" only autonomous commands.  ### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. ### Here are the instructions: ' + response
+    prompt = ('Your current working directory is ' + working_directory_path + '. '
+            'You are an autonomous terminal AI that only outputs an array string of ALL the steps needed to complete the instructions in order. '
+            'Do not use "cd", "open", "nano", or "save" commands, as you cannot change directories, open files, or directly edit files. '
+            'Construct file paths to achieve the desired outcome. '
+            '### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. '
+            '### Here are the instructions: ' + response)
 
     chat_window.update_conversation()
     openai.api_key = os.environ.get("OPENAI_API_KEY")
