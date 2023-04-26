@@ -97,4 +97,5 @@ def execute_response(task_array, chat_window):
         execute_command(task['command'], chat_window)
     work_mode.set(False)
     play_sound("success")
+    work_mode.set(False)  # Add this line to ensure work_mode is updated to False
     assistant_response(chat_window)
