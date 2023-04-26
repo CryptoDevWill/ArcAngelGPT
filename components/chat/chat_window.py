@@ -10,7 +10,7 @@ class ChatWindow(tk.Frame):
         self.mode_label = tk.Label(self, text="Work Mode" if work_mode else "Chill Mode", font=("Arial", 12), bg='black', fg='white')
         self.mode_label.pack(side=tk.TOP, anchor=tk.W)
 
-        self.conversation_listbox = tk.Listbox(self, bg='black', fg='white', width=80, height=20, wrap=tk.WORD)
+        self.conversation_listbox = tk.Listbox(self, bg='black', fg='white', width=80, height=20)
         self.conversation_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.scrollbar = tk.Scrollbar(self, command=self.conversation_listbox.yview)
