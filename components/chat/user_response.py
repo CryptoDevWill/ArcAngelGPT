@@ -1,6 +1,6 @@
 import tkinter as tk
 from data.global_variables import conversation
-
+from functions.execute_command import execute_command
 class UserResponse:
     def __init__(self, master):
         self.master = master
@@ -11,6 +11,7 @@ class UserResponse:
 
     def user_response(self, event):
         input_text = self.user_input.get()
+        execute_command(input_text)
         response = {"role": "user", "content": input_text}
         conversation.append(response)
         print(conversation)
