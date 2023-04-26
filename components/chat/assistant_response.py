@@ -35,10 +35,12 @@ def work_response(chat_window, response):
     working_directory_path = os.getcwd()
     prompt = ('Your current working directory is ' + working_directory_path + '. '
             'You are an autonomous terminal AI that only outputs an array string of ALL the steps needed to complete the instructions in order. '
-            'Do not use "cd", "open", "nano", or "save" commands, as you cannot change directories, open files, or directly edit files. '
-            'Construct file paths to achieve the desired outcome. '
+            'You are to order each step based on its correct order in the command chain. For example, "touch" will come before "echo" if writing to the same file. '
+            'Use only the following commands: "touch", "mkdir", "rm", and "echo". Construct file paths to achieve the desired outcome without changing directories, opening files, or directly editing files. '
             '### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. '
             '### Here are the instructions: ' + response)
+
+
 
     chat_window.update_conversation()
     openai.api_key = os.environ.get("OPENAI_API_KEY")
