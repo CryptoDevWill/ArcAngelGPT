@@ -7,17 +7,25 @@ from components.terminal.terminal import Terminal
 class ChatScreen:
     def __init__(self, master):
         self.master = master
-        self.frame = tk.Frame(master)
-        self.frame.pack(fill='both', expand=True)
 
-        # Create the chat window
-        self.chat_window = ChatWindow(self.frame)
-        self.chat_window.pack(fill=tk.BOTH, expand=True)
+        # create a container frame for the chat window and user input field
+        self.container = tk.Frame(self.master, bg='#f5f5f5', padx=10, pady=10)
+        self.container.pack(fill='both', expand=True)
 
-        # Create the user response input field
-        UserResponse(self.frame, self.chat_window)
+        # create the chat window
+        self.chat_window = ChatWindow(self.container, bg='#ffffff', bd=1, relief='solid')
+        self.chat_window.pack(fill='both', expand=True, padx=10, pady=10)
 
-        Terminal.instance(self.master)
+        # create the user response input field
+        self.user_input = UserResponse(self.container, self.chat_window)
+        
+        # set focus to the user input field by default
+        self.user_input.user_input.focus()
+
+
+
+
 
     def show(self):
-        self.frame.lift()
+        self.container.pack(fill='both', expand=True)
+        self.user_input.user_input.focus()
