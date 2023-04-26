@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from components.chat.chat_send import user_response
+from components.chat.user_response import user_response
 
 class ChatWindow:
     def __init__(self, master):
