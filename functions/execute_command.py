@@ -8,16 +8,14 @@ def update_terminal_output(terminal, output):
         terminal.update_output(output + '\n')
 
 def execute_command(command):
-    # Command execution
-    cmd_args = shlex.split(command)
-
     # Output to terminal
     terminal = Terminal.instance()
     update_terminal_output(terminal, f"Executing command: " + command)
     conversation.append({"role": "system", "content": f"Executing command: {command}"})
 
     try:
-        process = subprocess.run(cmd_args, text=True, capture_output=True, check=True)
+        # Run the command in a shell environment
+        process = subprocess.run(command, text=True, capture_output=True, check=True, shell=True)
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         # Output to terminal
         error_message = f"Error: '{command}' is not a valid command."

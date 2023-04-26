@@ -4,7 +4,11 @@ import os
 from data.conversation import conversation
 from dotenv import load_dotenv
 from data.global_variables import work_mode
+import os
+import re
+import json
 
+from functions.execute_command import execute_command
 load_dotenv()
 
 def assistant_response(chat_window):
@@ -17,7 +21,8 @@ def assistant_response(chat_window):
             messages=conversation
         )
         response = completion.choices[0].message.content
-        if '```' in response:
+        print(response)
+        if '`' in response:
             work_mode.set(True)
             work_response(chat_window, response)
         else:
@@ -25,9 +30,10 @@ def assistant_response(chat_window):
             conversation.append({"role": "assistant", "content": response})
             chat_window.update_conversation()
 
+
 def work_response(chat_window, response):
-    
-    prompt = 'Only output an array string and nothing else of the steps needed to complete this task in order. Example: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. Here are the instructions ' + response
+    working_directory_path = os.getcwd()
+    prompt = 'Your current working directory is ' + working_directory_path + '.  You are an autonomous terminal AI that only outputs an array string and nothing else of ALL the steps needed to complete the instructions in order. (Do not "cd", "open" nor "save") you can not "cd", "open", nor "save" only autonomous commands.  ### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. ### Here are the instructions: ' + response
 
     chat_window.update_conversation()
     openai.api_key = os.environ.get("OPENAI_API_KEY")
@@ -37,8 +43,33 @@ def work_response(chat_window, response):
         max_tokens=1500,
         temperature=0
         )
-    response = completion.choices[0].text
-    print(response)
-    conversation.append({"role": "assistant", "content": response})
-    chat_window.update_conversation()
+    task_array = completion.choices[0].text.strip()
+    print(task_array)
+    # Extract array from task_array using a regular expression
+    array_pattern = r'\[[^\]]*\]'
+    array_match = re.search(array_pattern, task_array)
+
+    if array_match:
+        task_array = array_match.group()
+
+        try:
+            tasks = json.loads(task_array)
+            if isinstance(tasks, list) and all(isinstance(task, dict) for task in tasks):
+                execute_response(tasks)
+            else:
+                raise ValueError("The response is not a valid array.")
+        except Exception as e:
+            print(f"Work mode exited due to error: {e}")
+            conversation.append({"role": "assistant", "content": "Work mode exited due to error."})
+            work_mode.set(False)
+            chat_window.update_conversation()
+    else:
+        print("Work mode exited due to error: No array found in the response.")
+        conversation.append({"role": "assistant", "content": "Work mode exited due to error: No array found in the response."})
+        work_mode.set(False)
+        chat_window.update_conversation()
+
+def execute_response(task_array):
     work_mode.set(False)
+    for task in task_array:
+        execute_command(task['command'])
