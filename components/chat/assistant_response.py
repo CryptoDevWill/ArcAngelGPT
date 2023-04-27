@@ -96,6 +96,8 @@ def execute_response(task_array, chat_window):
     for task in task_array:
         execute_command(task['command'], chat_window)
     work_mode.set(False)
+    conversation.append({"role": "system", "content": "Task complete!"})
+    chat_window.update_conversation()
     play_sound("success")
     work_mode.set(False)  # Add this line to ensure work_mode is updated to False
     assistant_response(chat_window)
