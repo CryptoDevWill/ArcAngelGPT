@@ -8,10 +8,10 @@ class ChatWindow(tk.Frame):
         super().__init__(master, **kwargs)
 
         self.mode_label = tk.Label(self,
-                                   text="Work Mode" if work_mode.get() else "Chill Mode",
-                                   font=("Arial", 12),
-                                   bg='green' if work_mode.get() else 'blue',
-                                   fg='white')
+            text="Work Mode" if work_mode.get() else "Chill Mode",
+            font=("Arial", 12),
+            bg='green' if work_mode.get() else 'blue',
+            fg='white')
         self.mode_label.pack(side=tk.TOP, anchor=tk.W)
 
 

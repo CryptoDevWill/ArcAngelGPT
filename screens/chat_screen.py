@@ -24,7 +24,7 @@ class ChatScreen:
         self.user_input.user_input.focus()
 
         #Send initial system message to ChatGPT with a 1-second delay
-        self.master.after(1000, lambda: _init(self.chat_window))
+        self.master.after(500, lambda: _init(self.chat_window))
 
     def show(self):
         self.container.pack(fill='both', expand=True)

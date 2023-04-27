@@ -3,6 +3,7 @@ import openai
 from data.conversation import conversation
 from functions.play_sound import play_sound
 from functions.speak import speak
+from data.global_variables import loading
 
 def _init(chat_window):
     openai.api_key = os.environ.get("OPENAI_API_KEY")
@@ -15,3 +16,4 @@ def _init(chat_window):
     chat_window.update_conversation()
     play_sound("response")
     speak(response)
+    loading.set(False)

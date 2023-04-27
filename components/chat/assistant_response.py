@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from data.global_variables import work_mode
 from functions.play_sound import play_sound
 from functions.speak import speak
+from data.global_variables import loading
 import os
 import re
 import json
@@ -32,6 +33,7 @@ def assistant_response(chat_window):
             play_sound("response")
             work_response(chat_window, response)
         else:
+            loading.set(False)
             conversation.append({"role": "assistant", "content": response})
             chat_window.update_conversation()
             play_sound("response")
