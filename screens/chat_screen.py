@@ -1,7 +1,7 @@
 import tkinter as tk
 from components.chat.user_response import UserResponse
 from components.chat.chat_window import ChatWindow
-from components.terminal.terminal import Terminal
+from gui.terminal import Terminal
 from functions._init import _init
 
 class ChatScreen:

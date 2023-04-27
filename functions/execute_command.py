@@ -1,6 +1,6 @@
 import subprocess
 import shlex
-from components.terminal.terminal import Terminal
+from gui.terminal import Terminal
 from data.conversation import conversation
 
 def update_terminal_output(terminal, output):
