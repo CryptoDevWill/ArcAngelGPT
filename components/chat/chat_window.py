@@ -26,7 +26,7 @@ class ChatWindow(tk.Frame):
     def update_conversation(self):
         global conversation
         self.conversation_listbox.delete(0, tk.END)
-        print(work_mode.get())
+        #print(work_mode.get())
         if work_mode.get():
             self.mode_label.configure(text="Work Mode", bg='#3a9d23')  # Changed to a dark green color
             self.conversation_listbox.configure(bg='#1e1e1e')
