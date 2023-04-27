@@ -11,9 +11,11 @@ class SettingsScreen:
         self.frame.pack(fill='both', expand=True)
 
         # Create a mute button
-        self.mute_button = tk.Button(self.frame, text="Mute Speech", command=self.toggle_mute)
-        self.mute_button.pack(pady=10)
+        self.api_key_label = tk.Label(self.frame, text="Speech Mode: ")
+        self.api_key_label.pack(side=tk.LEFT, pady=10, anchor=tk.N)
 
+        self.mute_button = tk.Button(self.frame, text="Mute Speech", command=self.toggle_mute)
+        self.mute_button.pack(side=tk.LEFT, padx=10, pady=10, anchor=tk.N)
         # Set the initial mute state to False
         self.mute_speech = False
 
