@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from dotenv import load_dotenv
 from functions.speak import mute_button
+from data.global_variables import *
 
 load_dotenv()
 
@@ -9,11 +10,26 @@ class DetailsScreen:
     def __init__(self, master):
         self.frame = tk.Frame(master)
         self.frame.pack(fill='both', expand=True)
-
         self.api_key = os.getenv('OPENAI_API_KEY')
         masked_api_key = self.mask_api_key(self.api_key)
         self.api_key_label = tk.Label(self.frame, text=f"OPENAI API KEY: {masked_api_key}")
         self.api_key_label.pack(pady=10)
+        self.api_key_label = tk.Label(self.frame, text=f"Working Directory: {os.getcwd()}")
+        self.api_key_label.pack(pady=10)
+        self.api_key_label = tk.Label(self.frame, text=f"Operating System: {platform.system()} {platform.release()}")
+        self.api_key_label.pack(pady=10)
+        self.api_key_label = tk.Label(self.frame, text=f"Architecture: {platform.machine()}")
+        self.api_key_label.pack(pady=10)
+        self.api_key_label = tk.Label(self.frame, text=f"Processor: {platform.processor()}")
+        self.api_key_label.pack(pady=10)
+        memory = psutil.virtual_memory().total / (1024 * 1024 * 1024)
+        disk_usage = psutil.disk_usage('/').total / (1024 * 1024 * 1024)
+        self.api_key_label = tk.Label(self.frame, text=f"Memory: {memory:.2f}")
+        self.api_key_label.pack(pady=10)
+        self.api_key_label = tk.Label(self.frame, text=f"Disk Usage: {disk_usage:.2f}")
+        self.api_key_label.pack(pady=10)
+
+
 
     def mask_api_key(self, api_key):
         if api_key:
