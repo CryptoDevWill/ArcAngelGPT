@@ -52,7 +52,7 @@ def work_response(chat_window, response):
             '### Here are the instructions: ' + response)
     
     work_mode.set(True)
-    conversation.append({"role": "system", "content": "Entering work mode"})
+    conversation.append({"role": "assistant", "content": "Entering work mode"})
     chat_window.update_conversation()
     play_sound('work')
 

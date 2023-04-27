@@ -39,6 +39,7 @@ def execute_command(command, chat_window):
             update_terminal_output(terminal, success_message)
 
             # Append the successful command message to the conversation as a system message
-            conversation.append({"role": "system", "content": success_message})
+            conversation.append({"role": "system", "content": output})
+            conversation.append({"role": "assistant", "content": success_message})
             chat_window.update_conversation()
             return success_message
