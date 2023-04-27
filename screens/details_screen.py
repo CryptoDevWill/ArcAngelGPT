@@ -15,13 +15,6 @@ class DetailsScreen:
         self.api_key_label = tk.Label(self.frame, text=f"OPENAI API KEY: {masked_api_key}")
         self.api_key_label.pack(pady=10)
 
-        # Create a mute button
-        self.mute_button = tk.Button(self.frame, text="Mute Speech", command=self.toggle_mute)
-        self.mute_button.pack(pady=10)
-
-        # Set the initial mute state to False
-        self.mute_speech = False
-
     def mask_api_key(self, api_key):
         if api_key:
             half_length = len(api_key) // 2

@@ -3,6 +3,7 @@ from tkinter import ttk
 from screens.chat_screen import ChatScreen
 from screens.details_screen import DetailsScreen
 from screens.terminal_screen import TerminalScreen
+from screens.settings_screen import SettingsScreen
 
 class Menu:
     def __init__(self, master):
@@ -19,7 +20,7 @@ class Menu:
         self.chat = ChatScreen(self.tab1)
         self.chat.show()
 
-        # Details Tab
+        # Terminal Tab
         self.tab2 = tk.Frame(self.notebook)
         self.notebook.add(self.tab2, text="Terminal")
         self.details = TerminalScreen(self.tab2)
@@ -29,6 +30,12 @@ class Menu:
         self.tab3 = tk.Frame(self.notebook)
         self.notebook.add(self.tab3, text="Details")
         self.details = DetailsScreen(self.tab3)
+        self.details.show()
+                
+        # settings Tab
+        self.tab4 = tk.Frame(self.notebook)
+        self.notebook.add(self.tab4, text="Settings")
+        self.details = SettingsScreen(self.tab4)
         self.details.show()
 
 
