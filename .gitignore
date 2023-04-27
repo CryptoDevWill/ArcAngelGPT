@@ -1,3 +1,8 @@
 *.env
 **/__pycache__/
 **.DS_Store
+/scraps.py
+/training_data
+/dist
+/build
+/main.spec

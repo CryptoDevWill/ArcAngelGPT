@@ -17,4 +17,6 @@ psutil==5.9.5
 pygame==2.3.0
 gtts==2.3.1
 playsound==1.2.2
-Pillow==9.5.0
+pillow==9.5.0
+pyQt5==5.15.9
+pyside2==5.13.2

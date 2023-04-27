@@ -30,6 +30,7 @@ global home_dir
 home_dir = os.path.expanduser("~")
 
 
+
 class WorkMode:
     def __init__(self):
         self.value = False
@@ -42,10 +43,22 @@ class WorkMode:
 
 work_mode = WorkMode()
 
+class ExecuteMode:
+    def __init__(self):
+        self.value = False
+
+    def set(self, state):
+        self.value = state
+
+    def get(self):
+        return self.value
+
+execute_mode = ExecuteMode()
+
 
 class Loading:
     def __init__(self):
-        self.value = True
+        self.value = False
 
     def set(self, state):
         self.value = state
@@ -54,3 +67,17 @@ class Loading:
         return self.value
 
 loading = Loading()
+
+
+
+class CurrentTasksArray:
+    def __init__(self):
+        self.value = []
+
+    def set(self, state):
+        self.value = state
+
+    def get(self):
+        return self.value
+
+current_tasks_array = CurrentTasksArray()

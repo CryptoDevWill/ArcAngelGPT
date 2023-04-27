@@ -7,6 +7,7 @@ from data.global_variables import work_mode
 from functions.play_sound import play_sound
 from functions.speak import speak
 from data.global_variables import loading
+from data.global_variables import current_tasks_array
 import os
 import re
 import json
@@ -16,28 +17,36 @@ load_dotenv()
 
 
 # Assitant response
+# Assistant response
 def assistant_response(chat_window):
-    work_mode.get()
     if work_mode.get():
         work_response(chat_window)
     else:
         openai.api_key = os.environ.get("OPENAI_API_KEY")
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=conversation
-        )
-        response = completion.choices[0].message.content
-        if '`' in response:
-            conversation.append({"role": "assistant", "content": "Okay i'll start working on that now!"})
-            chat_window.update_conversation()
-            play_sound("response")
-            work_response(chat_window, response)
-        else:
+        try:
+            completion = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=conversation
+            )
+            response = completion.choices[0].message.content
+            if '`' in response:
+                conversation.append({"role": "assistant", "content": "Okay i'll start working on that now!"})
+                chat_window.update_conversation()
+                play_sound("response")
+                work_response(chat_window, response)
+            else:
+                loading.set(False)
+                conversation.append({"role": "assistant", "content": response})
+                chat_window.update_conversation()
+                play_sound("response")
+                # speak(response)
+        except openai.error.AuthenticationError as e:
             loading.set(False)
-            conversation.append({"role": "assistant", "content": response})
+            conversation.append({"role": "assistant", "content": f"Sorry, there was an authentication error. {str(e)}"})
             chat_window.update_conversation()
-            play_sound("response")
-            speak(response)
+            play_sound("error")
+
+
 
 
 
@@ -47,7 +56,9 @@ def work_response(chat_window, response):
     prompt = ('Your current working directory is ' + working_directory_path + '. '
             'You are an autonomous terminal AI that only outputs an array string of ALL the steps needed to complete the instructions in order. '
             'You are to order each step based on its correct order in the command chain. For example, "touch" will come before "echo" if writing to the same file. '
-            'Use only the following commands: "touch", "mkdir", "rm", and "echo". Construct file paths to achieve the desired outcome without changing directories, opening files, or directly editing files. '
+            'Use only the following commands: "touch", "mkdir", "rm", and "echo". Construct file paths to achieve the desired outcome without changing directories, opening files, or directly editing files.'
+            'You are to only out put commands that can be executed autonomously with no user input.'
+            'You are prohibited to use commands "cd" or "nano"'
             '### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. '
             '### Here are the instructions: ' + response)
     
@@ -65,28 +76,33 @@ def work_response(chat_window, response):
         temperature=0
         )
     task_array = completion.choices[0].text.strip()
-    print(task_array)
+
     # Extract array from task_array using a regular expression
     array_pattern = r'\[[^\]]*\]'
     array_match = re.search(array_pattern, task_array)
 
     if array_match:
         task_array = array_match.group()
-
+        current_tasks_array.set(task_array)
         try:
             tasks = json.loads(task_array)
             if isinstance(tasks, list) and all(isinstance(task, dict) for task in tasks):
                 execute_response(tasks, chat_window)
             else:
+                work_mode.set(False)
+                loading.set(False)
                 raise ValueError("The response is not a valid array.")
         except Exception as e:
             work_mode.set(False)
+            loading.set(False)
             print(f"Work mode exited due to error: {e}")
             conversation.append({"role": "system", "content": "Work mode exited due to error."})
             chat_window.update_conversation()
             play_sound("error")
+            callback_response(chat_window)
     else:
         work_mode.set(False)
+        loading.set(False)
         print("Work mode exited due to error: No array found in the response.")
         conversation.append({"role": "system", "content": "Work mode exited due to error: No array found in the response."})
         chat_window.update_conversation()
@@ -97,9 +113,24 @@ def work_response(chat_window, response):
 def execute_response(task_array, chat_window):
     for task in task_array:
         execute_command(task['command'], chat_window)
+    # Set work mode false
     work_mode.set(False)
-    conversation.append({"role": "system", "content": "Task complete!"})
+    conversation.append({"role": "system", "content": "Task completed."})
     chat_window.update_conversation()
     play_sound("success")
-    work_mode.set(False)  # Add this line to ensure work_mode is updated to False
-    assistant_response(chat_window)
+    callback_response(chat_window)
+
+
+
+# Call back response to user
+def callback_response(chat_window):
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=conversation
+        )
+        response = completion.choices[0].message.content
+        loading.set(False)
+        conversation.append({"role": "assistant", "content": response})
+        chat_window.update_conversation()
+        play_sound("response")
+        # speak(response)    

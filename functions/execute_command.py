@@ -3,11 +3,26 @@ import shlex
 from gui.terminal import Terminal
 from data.conversation import conversation
 
+FORBIDDEN_COMMANDS = ["cd", "nano"]
+
 def update_terminal_output(terminal, output):
     if terminal is not None:
         terminal.update_output(output + '\n')
 
+def is_command_forbidden(command):
+    for forbidden_command in FORBIDDEN_COMMANDS:
+        if forbidden_command in command.split():
+            return True
+    return False
+
 def execute_command(command, chat_window):
+    # Check if command is forbidden
+    if is_command_forbidden(command):
+        forbidden_message = f"Error: '{command}' is a forbidden command."
+        conversation.append({"role": "system", "content": forbidden_message})
+        chat_window.update_conversation()
+        return forbidden_message
+
     # Output to terminal
     terminal = Terminal.instance()
     update_terminal_output(terminal, f"Executing command: " + command)
@@ -39,7 +54,9 @@ def execute_command(command, chat_window):
             update_terminal_output(terminal, success_message)
 
             # Append the successful command message to the conversation as a system message
-            conversation.append({"role": "system", "content": output})
-            conversation.append({"role": "assistant", "content": success_message})
+            if output:
+                conversation.append({"role": "system", "content": output})
+
+            conversation.append({"role": "system", "content": success_message})
             chat_window.update_conversation()
             return success_message

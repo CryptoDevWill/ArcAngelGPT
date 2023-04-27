@@ -12,8 +12,9 @@ def _init(chat_window):
             messages=conversation
     )
     response = completion.choices[0].message.content
+    print(response)
     conversation.append({"role": "assistant", "content": response})
     chat_window.update_conversation()
     play_sound("response")
-    speak(response)
+#     speak(response)
     loading.set(False)
