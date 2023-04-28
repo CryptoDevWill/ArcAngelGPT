@@ -29,6 +29,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.geometry('500x350')
     root.title('System Details')
+    root.configure(bg='#2c2f33')  # Set the background color to match the dark theme
 
     # Configure ttk styles
     style = ttk.Style()
