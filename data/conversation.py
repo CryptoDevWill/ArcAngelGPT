@@ -56,8 +56,8 @@ conversation = [
         "Your name is " + username +
         ". Your home directory is " + home_dir +
         ". Your working directory is " + working_directory_path +
-        # ". The files and folders in your working directory are " + file_tree +
-        # ". Your operating system is " + operating_system +
+        ". The files and folders in your working directory are " + file_tree +
+        ". Your operating system is " + operating_system +
         # ". Your system architecture is " + architecture +
         # ". Your processor is " + processor +
         # f". You have {memory:.2f} GB of RAM and {disk_usage:.2f} GB of total disk space." +
