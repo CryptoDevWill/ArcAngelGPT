@@ -24,7 +24,7 @@ Here's a list of the main contributors to this project, along with their profile
     </td>
     <td align="center">
       <a href="https://github.com/haffelchen">
-        <img src="https://avatars.githubusercontent.com/virtualzx-nad" width="100px;" alt="haffelchen"/>
+        <img src="https://avatars.githubusercontent.com/haffelchen" width="100px;" alt="haffelchen"/>
         <br />
         <sub><b>Haffelchen</b></sub>
       </a><br />
