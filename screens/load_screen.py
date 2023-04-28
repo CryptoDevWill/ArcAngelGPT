@@ -1,6 +1,7 @@
 import tkinter as tk
 import time
 from PIL import Image, ImageTk
+from data.global_variables import loading
 
 def show_loading_screen(window):
     window.withdraw()  # Hide the main window

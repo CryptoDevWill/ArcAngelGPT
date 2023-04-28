@@ -3,7 +3,7 @@ import shlex
 from gui.terminal import Terminal
 from data.conversation import conversation
 
-FORBIDDEN_COMMANDS = ["cd", "nano"]
+FORBIDDEN_COMMANDS = ["cd", "nano", "shuf"]
 
 def update_terminal_output(terminal, output):
     if terminal is not None:
