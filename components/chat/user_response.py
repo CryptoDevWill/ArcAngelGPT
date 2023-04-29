@@ -1,8 +1,10 @@
 import tkinter as tk
 from data.conversation import conversation
 from functions.play_sound import play_sound
-from models.arc import arc
+from arcangelai import Arc
 import threading
+
+arc = Arc({"key": "abc123", "name": "Will" })
 
 class UserResponse:
     def __init__(self, master, chat_window):
@@ -79,7 +81,15 @@ class UserResponse:
         self.chat_window.update_conversation()
         self.user_input.delete(0, 'end')
         play_sound('send')
-
         # Execute Arc in a separate thread
-        arc_thread = threading.Thread(target=arc, args=(user_input, self.chat_window))
+        arc_thread = threading.Thread(target=arc_response, args=(user_input, self.chat_window))
         arc_thread.start()
+
+
+def arc_response(user_input, chat_window):
+    print(user_input)
+    response = arc.chat(user_input)
+    conversation.append({"role": "assistant", "content": user_input})
+    chat_window.update_conversation()
+    play_sound("response")
+    print(response)
