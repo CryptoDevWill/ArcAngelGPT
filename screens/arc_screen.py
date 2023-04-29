@@ -2,10 +2,10 @@ import tkinter as tk
 from components.chat.user_response import UserResponse
 from components.chat.chat_window import ChatWindow
 from gui.current_steps import create_steps_box
-from gui.loading_indicator import LoadingIndicator
+from gui.thinking_indicator import ThinkingIndicator
+from components.file_tree.file_tree import FileTree
 
-
-class ChatScreen:
+class ArcScreen:
     def __init__(self, master):
         self.master = master
 
@@ -28,16 +28,20 @@ class ChatScreen:
         self.user_input = UserResponse(self.left_pane, self.chat_window)
         self.user_input.user_input.configure(bg='#1e1e1e', fg='white', insertbackground='white')
 
-           # Loading indicator
-        self.loading_indicator = LoadingIndicator(self.left_pane, bg='#2d2d2d', fg='white')
-        self.loading_indicator.set_loading(False)  # Set initial loading status
+        # Loading indicator
+        self.loading_indicator = ThinkingIndicator(self.left_pane, bg='#2d2d2d', fg='white')
         self.loading_indicator.pack(side='bottom', padx=10, pady=10)
 
         # set focus to the user input field by default
         self.user_input.user_input.focus()
 
+        # create the file tree
+        self.file_tree = FileTree(self.right_pane, bg='#2d2d2d')
+        self.file_tree.pack(side='top', fill='both', expand=True, padx=10, pady=10)
+
+        # create the current steps box
         steps_box = create_steps_box(self.right_pane)
-        steps_box.pack(padx=10, pady=10)
+        steps_box.pack(side='bottom', padx=10, pady=10)
 
         # #Send initial system message to ChatGPT with a 1-second delay
         # self.master.after(500, lambda: _init(self.chat_window))

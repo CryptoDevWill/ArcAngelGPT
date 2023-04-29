@@ -9,12 +9,12 @@ class ChatWindow(tk.Frame):
 
         self.mode_label = tk.Label(self,
             text="Work Mode" if work_mode.get() else "Chill Mode",
-            font=("Arial", 12),
-            bg='green' if work_mode.get() else 'blue',
+            font=("Arial", 14),
+            bg='#008e02' if work_mode.get() else '#0005c5',
             fg='white')
         self.mode_label.pack(side=tk.TOP, anchor=tk.W)
 
-        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', width=80, height=20, wrap=tk.WORD)
+        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD)
         self.conversation_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.conversation_text.config(state=tk.DISABLED)  # Disable editing of the Text widget
 

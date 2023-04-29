@@ -7,7 +7,7 @@ from data.global_variables import work_mode
 from functions.play_sound import play_sound
 from functions.speak import speak
 from data.global_variables import loading
-from data.global_variables import current_tasks_array
+from data.global_variables import current_tasks_array, working_directory_path
 import os
 import re
 import json
@@ -24,13 +24,22 @@ def assistant_response(chat_window):
     else:
         openai.api_key = os.environ.get("OPENAI_API_KEY")
         try:
+            conversation.append({
+                "role": "system",
+                "content": (
+                    "AI, please assist me with the following tasks. Whenever I ask for a command execution, "
+                    "such as 'make a folder' or 'save the file', provide the command enclosed in backticks (```) "
+                    "in your response. This will help trigger the appropriate execution function. "
+                    "However, for regular conversations, avoid using backticks so as not to activate "
+                    "the execution function inadvertently."
+                )
+            })
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=conversation
             )
             response = completion.choices[0].message.content
             if '`' in response:
-                conversation.append({"role": "assistant", "content": "Okay i'll start working on that now!"})
                 chat_window.update_conversation()
                 play_sound("response")
                 work_response(chat_window, response)
@@ -52,31 +61,50 @@ def assistant_response(chat_window):
 
 # Enter work mode
 def work_response(chat_window, response):
-    working_directory_path = os.getcwd()
-    prompt = ('Your current working directory is ' + working_directory_path + '. '
-            'You are an autonomous terminal AI that only outputs an array string of ALL the steps needed to complete the instructions in order. '
-            'You are to order each step based on its correct order in the command chain. For example, "touch" will come before "echo" if writing to the same file. '
-            'Use only the following commands: "touch", "mkdir", "rm", and "echo". Construct file paths to achieve the desired outcome without changing directories, opening files, or directly editing files.'
-            'You are to only out put commands that can be executed autonomously with no user input.'
-            'You are prohibited to use commands "cd" or "nano"'
-            '### Example Output: [{"instruction": "create folder named myfolder", "command": "mkdir myfolder"}, {"instruction": "create json file called jokes", "command": "touch jokes.json"}]. '
-            '### Here are the instructions: ' + response)
-    
+
+
+    prompt = (
+        "Process a series of tasks as a headless server environment. "
+        "Use autonomous commands like 'echo', 'touch', or 'mv' and avoid any commands that require user interaction. "
+        "Please generate an output in the form of an array containing objects with both the "
+        "instruction and its corresponding command for each step, as shown in the example below:"
+        "Example Output:"
+        "["
+        "  {'instruction': 'create folder named myfolder', 'command': 'mkdir myfolder'},"
+        "  {'instruction': 'create text file called words to that folder', 'command': 'touch myfolder/words.txt'},"
+        "  {'instruction': 'add 3 random words to it', 'command': 'echo 'Word1, Word2, Word 3' > myfolder/words.txt'}"
+        "]"
+        "Ensure that your output strictly adheres to the array format, without any extra characters "
+        "or elements that could interfere with the parsing of the next command."
+    )
+
+
     work_mode.set(True)
     conversation.append({"role": "system", "content": "Entering work mode"})
     chat_window.update_conversation()
     play_sound('work')
 
     # Ask openai to complete request using Completion Function
-    openai.api_key = os.environ.get("OPENAI_API_KEY")
+
     completion = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        max_tokens=1500,
-        temperature=0
+            engine="text-davinci-003",
+            prompt=(
+                "AI, I need your help in processing a task for a headless server environment. "
+                "Use autonomous commands like 'echo', 'touch', or 'mv' and avoid any commands that require "
+                "further user engagement, such as 'nano' or 'cd'.\n\n"
+                "Here's the instruction I'd like you to follow: make a file called candy\n\n"
+                "Please provide an array of objects with the necessary commands for the given instruction, "
+                "with the format {\"instruction\": \"...\", \"command\": \"...\", \"complete\": False}, without adding any extra steps."
+                f"Here are the instructions I'd like you to follow: " + response + ""
+                f"The working directory is given by {working_directory_path}."
+            ),
+            max_tokens=100,
+            n=1,
+            stop=None,
+            temperature=0,
         )
     task_array = completion.choices[0].text.strip()
-
+    print(task_array)
     # Extract array from task_array using a regular expression
     array_pattern = r'\[[^\]]*\]'
     array_match = re.search(array_pattern, task_array)

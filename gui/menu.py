@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from screens.chat_screen import ChatScreen
+from screens.arc_screen import ArcScreen
 from screens.details_screen import DetailsScreen
 from screens.terminal_screen import TerminalScreen
 from screens.settings_screen import SettingsScreen
@@ -14,10 +14,10 @@ class Menu:
         self.notebook = ttk.Notebook(master)
         self.notebook.pack(fill='both', expand=True)
 
-        # Chat Tab
+        # Arc Tab
         self.tab1 = tk.Frame(self.notebook)
-        self.notebook.add(self.tab1, text="Chat")
-        self.chat = ChatScreen(self.tab1)
+        self.notebook.add(self.tab1, text="Arc")
+        self.chat = ArcScreen(self.tab1)
         self.chat.show()
 
         # Terminal Tab

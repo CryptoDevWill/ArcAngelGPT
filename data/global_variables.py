@@ -5,8 +5,16 @@ import psutil
 
 load_dotenv()
 
-global working_directory_path
-working_directory_path = os.getcwd()
+try:
+    username = os.environ['USERNAME']
+except:
+    username = os.environ['USER']
+
+global root_directory_path
+root_directory_path = os.getcwd()
+
+global working_directory
+working_directory = os.getcwd() + "/working_directory"
 
 global operating_system
 operating_system = platform.system() + " " + platform.release()
@@ -30,6 +38,10 @@ global home_dir
 home_dir = os.path.expanduser("~")
 
 
+global forbbiden_commands
+forbidden_commands = "cd, nano, vi, vim, save, open, code"
+
+
 
 class WorkMode:
     def __init__(self):
@@ -43,7 +55,8 @@ class WorkMode:
 
 work_mode = WorkMode()
 
-class ExecuteMode:
+
+class Thinking:
     def __init__(self):
         self.value = False
 
@@ -53,7 +66,8 @@ class ExecuteMode:
     def get(self):
         return self.value
 
-execute_mode = ExecuteMode()
+thinking = Thinking()
+
 
 
 class Loading:

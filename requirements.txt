@@ -20,3 +20,7 @@ playsound==1.2.2
 pillow==9.5.0
 pyQt5==5.15.9
 pyside2==5.13.2
+colorama==0.4.6
+spacy==3.4.4
+sentencepiece==0.1.98
+transformers==4.28.1

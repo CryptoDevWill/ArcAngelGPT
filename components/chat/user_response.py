@@ -1,17 +1,20 @@
-import threading
 import tkinter as tk
 from data.conversation import conversation
-from components.chat.assistant_response import assistant_response
 from functions.play_sound import play_sound
-from data.global_variables import loading
+from models.arc import arc
+import threading
 
 class UserResponse:
     def __init__(self, master, chat_window):
         self.master = master
         self.chat_window = chat_window
+        self.max_input_length = 100
+        self.char_count = 0
+        self.user_frame = tk.Frame(self.master, bg='#2d2d2d')
+        self.user_frame.pack(fill='x', padx=10, pady=10)
 
         self.user_input = tk.Entry(
-            self.master,
+            self.user_frame,
             borderwidth=0,
             highlightthickness=1,
             highlightcolor='#cccccc',
@@ -19,9 +22,11 @@ class UserResponse:
             fg='white',
             bg='#2d2d2d',
             relief='flat',
-            insertbackground='white'
+            insertbackground='white',
+            validate='key',
+            validatecommand=(self.master.register(self.validate_input), '%P')
         )
-        self.user_input.pack(fill='x', padx=10, pady=10, ipady=4)  # Added ipady for increased height
+        self.user_input.pack(side='left', fill='x', expand=True)
 
         # add a placeholder text
         self.user_input.insert(0, 'Enter your text here...')
@@ -42,23 +47,39 @@ class UserResponse:
         self.user_input.bind('<FocusIn>', on_focus)
         self.user_input.bind('<FocusOut>', on_unfocus)
         self.user_input.bind('<Return>', self.user_response)
-        
+
+        # add character counter
+        self.char_counter = tk.Label(
+            self.user_frame,
+            text=f'0/{self.max_input_length}',
+            font=('Helvetica', 14),
+            fg='#999999',
+            bg='#2d2d2d'
+        )
+        self.char_counter.pack(side='right', padx=(0, 10))
+
+        # bind key events to update character counter
+        self.user_input.bind('<KeyRelease>', self.update_char_counter)
+
+    def validate_input(self, input_text):
+        return len(input_text) <= self.max_input_length
+
+    def update_char_counter(self, event):
+        input_text = self.user_input.get()
+        self.char_count = len(input_text)
+        self.char_counter.config(text=f'{self.char_count}/{self.max_input_length}')
+        if self.char_count == self.max_input_length:
+            self.char_counter.config(fg='#a10000')
+        else:
+            self.char_counter.config(fg='#999999')
 
     def user_response(self, event):
-        if loading.get():
-            print("Please wait")
-        else:    
-            input_text = self.user_input.get()
-            if not input_text:
-                print("Enter text")
-            else:    
-                loading.set(True)
-                conversation.append({"role": "user", "content": input_text})
-                self.chat_window.update_conversation()
-                self.user_input.delete(0, 'end')
-                play_sound('send')
-                # Run assistant_response() in a separate thread
-                threading.Thread(target=self.run_assistant_response).start()
+        user_input = self.user_input.get()
+        conversation.append({"role": "user", "content": user_input})
+        self.chat_window.update_conversation()
+        self.user_input.delete(0, 'end')
+        play_sound('send')
 
-    def run_assistant_response(self):
-        assistant_response(self.chat_window)
+        # Execute Arc in a separate thread
+        arc_thread = threading.Thread(target=arc, args=(user_input, self.chat_window))
+        arc_thread.start()
