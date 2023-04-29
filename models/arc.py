@@ -4,7 +4,7 @@ from engine.question import question
 
 def arc(prompt, chat_window):
     # Load ArcAngel 2.0.0
-    nlp = spacy.load('models/arc_output')
+    nlp = spacy.load('models/output')
     doc = nlp(prompt)
     cats = doc.cats
     prompt_action = max(cats, key=cats.get)

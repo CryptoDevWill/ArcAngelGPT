@@ -1,0 +1,7 @@
+{
+  "labels":[
+    "question",
+    "command"
+  ],
+  "threshold":0.5
+}
