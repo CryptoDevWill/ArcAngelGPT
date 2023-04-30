@@ -34,6 +34,11 @@ class ChatWindow(tk.Frame):
             pass
 
     def highlight_selected_text(self, event):
+            # Check if there is any selected text
+            sel = self.conversation_text.tag_ranges("sel")
+            if not sel:
+                return
+
             # Remove any previous highlighting
             self.conversation_text.tag_remove("highlight", "1.0", tk.END)
 
