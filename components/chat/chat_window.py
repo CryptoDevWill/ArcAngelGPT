@@ -21,7 +21,8 @@ class ChatWindow(tk.Frame):
         # Bind the appropriate keyboard shortcuts for copy and paste
         self.conversation_text.bind("<Control-c>", self.copy_text)
         self.conversation_text.bind("<Control-v>", self.paste_text)
-        self.conversation_text.bind("<ButtonRelease-1>", self.highlight_selected_text)
+        self.conversation_text.bind("<B1-Motion>", self.highlight_selected_text)
+        
         self.prev_bg_color = self.conversation_text.cget('bg')
         self.prev_fg_color = self.conversation_text.cget('fg')
 
@@ -52,7 +53,7 @@ class ChatWindow(tk.Frame):
         # Apply a tag with a background color to the selected text
         self.conversation_text.tag_add("highlight", start, end)
         self.conversation_text.tag_configure("highlight", background="#FFCC00")
-        
+
     def paste_text(self, event):
         # Do nothing on paste as the Text widget is read-only
         pass
