@@ -87,9 +87,24 @@ class UserResponse:
 
 
 def arc_response(user_input, chat_window):
-    print(user_input)
+
     response = arc.chat(user_input)
-    conversation.append({"role": "assistant", "content": user_input})
-    chat_window.update_conversation()
-    play_sound("response")
-    print(response)
+    print(response['message'])
+    if response['code'] == 200:
+        if response['message'] == 'command':
+            conversation.append({"role": "assistant", "content": response['message']})
+            chat_window.update_conversation()
+            play_sound("response")
+            return
+
+        if response['message'] == 'question':
+            conversation.append({"role": "assistant", "content": response['message']})
+            chat_window.update_conversation()
+            play_sound("response")
+            return
+    else:
+            print(response.message)
+            conversation.append({"role": "assistant", "content": response['message']})
+            chat_window.update_conversation()
+            play_sound("response")
+            return
