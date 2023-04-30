@@ -14,13 +14,30 @@ class ChatWindow(tk.Frame):
             fg='white')
         self.mode_label.pack(side=tk.TOP, anchor=tk.W)
 
-        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD)
+        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD, exportselection=True)
         self.conversation_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.conversation_text.config(state=tk.DISABLED)  # Disable editing of the Text widget
 
+        # Bind the appropriate keyboard shortcuts for copy and paste
+        self.conversation_text.bind("<Control-c>", self.copy_text)
+        self.conversation_text.bind("<Control-v>", self.paste_text)
+
+    def copy_text(self, event):
+        # Copy selected text to clipboard
+        try:
+            selected_text = self.conversation_text.selection_get()
+            self.clipboard_clear()
+            self.clipboard_append(selected_text)
+        except:
+            pass
+
+    def paste_text(self, event):
+        # Do nothing on paste as the Text widget is read-only
+        pass
+
     def update_conversation(self):
         global conversation
-        self.conversation_text.config(state=tk.NORMAL)  # Enable editing to update the conversation
+        self.conversation_text.config(state=tk.NORMAL)  # Enable editing to update the stant:
         self.conversation_text.delete(1.0, tk.END)
         if work_mode.get():
             self.mode_label.configure(text="Work Mode", bg='#3a9d23')  # Changed to a dark green color
