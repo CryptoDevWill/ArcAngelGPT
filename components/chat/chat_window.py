@@ -22,7 +22,8 @@ class ChatWindow(tk.Frame):
         self.conversation_text.bind("<Control-c>", self.copy_text)
         self.conversation_text.bind("<Control-v>", self.paste_text)
         self.conversation_text.bind("<ButtonRelease-1>", self.highlight_selected_text)
-
+        self.prev_bg_color = self.conversation_text.cget('bg')
+        self.prev_fg_color = self.conversation_text.cget('fg')
 
     def copy_text(self, event):
         # Copy selected text to clipboard
@@ -34,22 +35,24 @@ class ChatWindow(tk.Frame):
             pass
 
     def highlight_selected_text(self, event):
-            # Check if there is any selected text
-            sel = self.conversation_text.tag_ranges("sel")
-            if not sel:
-                return
+        # Check if there is any selected text
+        sel = self.conversation_text.tag_ranges("sel")
+        if not sel:
+            # No selected text, so revert to the previous color scheme
+            self.conversation_text.configure(bg=self.prev_bg_color, fg=self.prev_fg_color)
+            return
 
-            # Remove any previous highlighting
-            self.conversation_text.tag_remove("highlight", "1.0", tk.END)
+        # Remove any previous highlighting
+        self.conversation_text.tag_remove("highlight", "1.0", tk.END)
 
-            # Get the indices of the selected text
-            start = self.conversation_text.index("sel.first")
-            end = self.conversation_text.index("sel.last")
+        # Get the indices of the selected text
+        start = self.conversation_text.index("sel.first")
+        end = self.conversation_text.index("sel.last")
 
-            # Apply a tag with a background color to the selected text
-            self.conversation_text.tag_add("highlight", start, end)
-            self.conversation_text.tag_configure("highlight", background="#FFCC00")
-
+        # Apply a tag with a background color to the selected text
+        self.conversation_text.tag_add("highlight", start, end)
+        self.conversation_text.tag_configure("highlight", background="#FFCC00")
+        
     def paste_text(self, event):
         # Do nothing on paste as the Text widget is read-only
         pass
