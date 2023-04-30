@@ -9,6 +9,5 @@ def chat_completion():
         model="gpt-3.5-turbo",
         messages=conversation
     )
-    print(completion.choices[0])
     return completion.choices[0].message
 

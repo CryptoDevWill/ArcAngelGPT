@@ -92,17 +92,10 @@ class UserResponse:
 
 
 def arc_response(user_input, chat_window):
-    response = arc.chat(user_input)
-    if response['code'] == 200:
-            conversation.append({"role": "system", "content": response['message']})
             completion = openai.ChatCompletion.create( model="gpt-3.5-turbo", messages=conversation)
             chat_response = completion.choices[0].message
             conversation.append({"role": "assistant", "content": chat_response.content})
             chat_window.update_conversation()
             play_sound("response")
             return
-    else:
-            conversation.append({"role": "assistant", "content": response['message']})
-            chat_window.update_conversation()
-            play_sound("error")
-            return
+ 
