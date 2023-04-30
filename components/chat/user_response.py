@@ -9,7 +9,7 @@ import openai
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-arc = Arc({"key": "abc123", "name": "Will" })
+arc = Arc({"key": "abc123", "name": "Name" })
 
 class UserResponse:
     def __init__(self, master, chat_window):
@@ -92,6 +92,7 @@ class UserResponse:
 
 
 def arc_response(user_input, chat_window):
+            
             completion = openai.ChatCompletion.create( model="gpt-3.5-turbo", messages=conversation)
             chat_response = completion.choices[0].message
             conversation.append({"role": "assistant", "content": chat_response.content})

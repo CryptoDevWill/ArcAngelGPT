@@ -5,6 +5,8 @@ from gui.current_steps import create_steps_box
 from gui.thinking_indicator import ThinkingIndicator
 from components.file_tree.file_tree import FileTree
 
+
+
 class ArcScreen:
     def __init__(self, master):
         self.master = master

@@ -86,7 +86,7 @@ loading = Loading()
 
 class CurrentTasksArray:
     def __init__(self):
-        self.value = []
+        self.value = [{"instruction": "How to save a life!", "complete": True}]
 
     def set(self, state):
         self.value = state
