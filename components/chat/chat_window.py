@@ -14,13 +14,15 @@ class ChatWindow(tk.Frame):
             fg='white')
         self.mode_label.pack(side=tk.TOP, anchor=tk.W)
 
-        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD, exportselection=True)
+        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', selectforeground='yellow', selectbackground='red', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD, exportselection=True)
         self.conversation_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.conversation_text.config(state=tk.DISABLED)  # Disable editing of the Text widget
 
         # Bind the appropriate keyboard shortcuts for copy and paste
         self.conversation_text.bind("<Control-c>", self.copy_text)
         self.conversation_text.bind("<Control-v>", self.paste_text)
+        self.conversation_text.bind("<ButtonRelease-1>", self.highlight_selected_text)
+
 
     def copy_text(self, event):
         # Copy selected text to clipboard
@@ -30,6 +32,18 @@ class ChatWindow(tk.Frame):
             self.clipboard_append(selected_text)
         except:
             pass
+
+    def highlight_selected_text(self, event):
+            # Remove any previous highlighting
+            self.conversation_text.tag_remove("highlight", "1.0", tk.END)
+
+            # Get the indices of the selected text
+            start = self.conversation_text.index("sel.first")
+            end = self.conversation_text.index("sel.last")
+
+            # Apply a tag with a background color to the selected text
+            self.conversation_text.tag_add("highlight", start, end)
+            self.conversation_text.tag_configure("highlight", background="#FFCC00")
 
     def paste_text(self, event):
         # Do nothing on paste as the Text widget is read-only
