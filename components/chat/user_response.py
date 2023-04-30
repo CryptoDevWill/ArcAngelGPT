@@ -1,7 +1,6 @@
 import tkinter as tk
 from data.conversation import conversation
 from functions.play_sound import play_sound
-from arcangelai import Arc
 import threading
 import os
 import openai
@@ -9,7 +8,7 @@ import openai
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-arc = Arc({"key": "abc123", "name": "Name" })
+
 
 class UserResponse:
     def __init__(self, master, chat_window):
