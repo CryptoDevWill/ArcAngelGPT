@@ -91,9 +91,9 @@ class UserResponse:
 
 
 def arc_response(user_input, chat_window):
-            
             completion = openai.ChatCompletion.create( model="gpt-3.5-turbo", messages=conversation)
             chat_response = completion.choices[0].message
+            print(chat_response)
             conversation.append({"role": "assistant", "content": chat_response.content})
             chat_window.update_conversation()
             play_sound("response")
