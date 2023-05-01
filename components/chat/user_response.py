@@ -3,6 +3,7 @@ from data.conversation import conversation
 from data.global_variables import loading
 from gui.current_steps import current_tasks_array
 from functions.play_sound import play_sound
+from tools.parse_command import parse_command
 import threading
 import os
 import openai
@@ -101,6 +102,7 @@ def gpt_response(user_input, chat_window):
         loading.set(True)
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         chat_response = completion.choices[0].message
+        print(chat_response)
         conversation.append({"role": "assistant", "content": chat_response.content})
     except openai.error.InvalidRequestError as e:
         error_message = "Error: " + str(e)
@@ -109,8 +111,8 @@ def gpt_response(user_input, chat_window):
         chat_window.update_conversation()
         play_sound("response")
         loading.set(False)
-        # arc_thread = threading.Thread(target=arc_response, args=(chat_response.content,))
-        # arc_thread.start()
+        command = threading.Thread(target=parse_command, args=(chat_response.content,))
+        command.start()
 
 
  
