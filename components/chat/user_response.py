@@ -108,6 +108,7 @@ def gpt_response(user_input, chat_window):
     finally:
         chat_window.update_conversation()
         play_sound("response")
+        loading.set(False)
         # arc_thread = threading.Thread(target=arc_response, args=(chat_response.content,))
         # arc_thread.start()
 
@@ -122,4 +123,3 @@ def gpt_response(user_input, chat_window):
 #     # current_tasks_array.set(current_tasks)
 #     # work_mode.set(True)
 #     # play_sound("work")
-#     loading.set(False)
