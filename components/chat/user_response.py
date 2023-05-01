@@ -1,14 +1,15 @@
 import tkinter as tk
 from data.conversation import conversation
 from data.global_variables import loading
+from data.global_variables import current_tasks_array
 from functions.play_sound import play_sound
 import threading
 import os
 import openai
+from arcangelai import Arc
 
+arc = Arc({"key": "abc123", "name": "Arc"})
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-
 
 
 class UserResponse:
@@ -90,17 +91,33 @@ class UserResponse:
             self.user_input.delete(0, 'end')
             play_sound('send')
             # Execute Arc in a separate thread
-            gpt_thread = threading.Thread(target=arc_response, args=(user_input, self.chat_window))
+            gpt_thread = threading.Thread(target=gpt_response, args=(user_input, self.chat_window))
             gpt_thread.start()
 
 
-def arc_response(user_input, chat_window):
-            loading.set(True)
-            completion = openai.ChatCompletion.create( model="gpt-3.5-turbo", messages=conversation)
-            chat_response = completion.choices[0].message
-            print(chat_response)
-            conversation.append({"role": "assistant", "content": chat_response.content})
-            chat_window.update_conversation()
-            play_sound("response")
-            return loading.set(False)
+def gpt_response(user_input, chat_window):
+    try:
+        loading.set(True)
+        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
+        chat_response = completion.choices[0].message
+        print(chat_response)
+        conversation.append({"role": "assistant", "content": chat_response.content})
+    except openai.error.InvalidRequestError as e:
+        error_message = "Error: " + str(e)
+        conversation.append({"role": "assistant", "content": error_message})
+    finally:
+        chat_window.update_conversation()
+        play_sound("response")
+        arc_thread = threading.Thread(target=arc_response, args=(chat_response.content,))
+        arc_thread.start()
+
+
  
+
+def arc_response(input):
+    response = arc.chat(input)
+    print(response)
+    current_tasks = response['message']['plan']  # Extract the plan from the response
+    current_tasks_array.set(current_tasks)
+    play_sound("work")
+    loading.set(False)
