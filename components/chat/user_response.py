@@ -1,5 +1,6 @@
 import tkinter as tk
 from data.conversation import conversation
+from data.global_variables import loading
 from functions.play_sound import play_sound
 import threading
 import os
@@ -80,22 +81,26 @@ class UserResponse:
             self.char_counter.config(fg='#999999')
 
     def user_response(self, event):
-        user_input = self.user_input.get()
-        conversation.append({"role": "user", "content": user_input})
-        self.chat_window.update_conversation()
-        self.user_input.delete(0, 'end')
-        play_sound('send')
-        # Execute Arc in a separate thread
-        arc_thread = threading.Thread(target=arc_response, args=(user_input, self.chat_window))
-        arc_thread.start()
+        if loading.get():
+             return print("please wait")
+        else:
+            user_input = self.user_input.get()
+            conversation.append({"role": "user", "content": user_input})
+            self.chat_window.update_conversation()
+            self.user_input.delete(0, 'end')
+            play_sound('send')
+            # Execute Arc in a separate thread
+            gpt_thread = threading.Thread(target=arc_response, args=(user_input, self.chat_window))
+            gpt_thread.start()
 
 
 def arc_response(user_input, chat_window):
+            loading.set(True)
             completion = openai.ChatCompletion.create( model="gpt-3.5-turbo", messages=conversation)
             chat_response = completion.choices[0].message
             print(chat_response)
             conversation.append({"role": "assistant", "content": chat_response.content})
             chat_window.update_conversation()
             play_sound("response")
-            return
+            return loading.set(False)
  
