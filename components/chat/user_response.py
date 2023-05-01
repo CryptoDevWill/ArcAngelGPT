@@ -1,12 +1,13 @@
 import tkinter as tk
 from data.conversation import conversation
 from data.global_variables import loading
-from data.global_variables import current_tasks_array
+from gui.current_steps import current_tasks_array
 from functions.play_sound import play_sound
 import threading
 import os
 import openai
 from arcangelai import Arc
+from data.global_variables import work_mode
 
 arc = Arc({"key": "abc123", "name": "Arc"})
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -100,7 +101,6 @@ def gpt_response(user_input, chat_window):
         loading.set(True)
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         chat_response = completion.choices[0].message
-        print(chat_response)
         conversation.append({"role": "assistant", "content": chat_response.content})
     except openai.error.InvalidRequestError as e:
         error_message = "Error: " + str(e)
@@ -108,16 +108,18 @@ def gpt_response(user_input, chat_window):
     finally:
         chat_window.update_conversation()
         play_sound("response")
-        arc_thread = threading.Thread(target=arc_response, args=(chat_response.content,))
-        arc_thread.start()
+        # arc_thread = threading.Thread(target=arc_response, args=(chat_response.content,))
+        # arc_thread.start()
 
 
  
 
-def arc_response(input):
-    response = arc.chat(input)
-    print(response)
-    current_tasks = response['message']['plan']  # Extract the plan from the response
-    current_tasks_array.set(current_tasks)
-    play_sound("work")
-    loading.set(False)
+# def arc_response(input):
+
+#     response = arc.chat(input)
+#     print(response)
+#     # current_tasks = response['message']['plan']  # Extract the plan from the response
+#     # current_tasks_array.set(current_tasks)
+#     # work_mode.set(True)
+#     # play_sound("work")
+#     loading.set(False)

@@ -82,16 +82,3 @@ class Loading:
 
 loading = Loading()
 
-
-
-class CurrentTasksArray:
-    def __init__(self):
-        self.value = []
-
-    def set(self, state):
-        self.value = state
-
-    def get(self):
-        return self.value
-
-current_tasks_array = CurrentTasksArray()

@@ -41,7 +41,11 @@ class StepsBox(tk.LabelFrame, TaskObserver):
 
         for index, step in enumerate(current_tasks_array.get()):
             step_text = list(step.values())[0]
-            step_complete = list(step.values())[1]
+            values_list = list(step.values())
+            if len(values_list) >= 2:
+                step_complete = values_list[1]
+            else:
+                step_complete = False
 
             if step_complete:
                 status_symbol = "✓"
