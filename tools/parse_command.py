@@ -6,6 +6,8 @@ from functions.play_sound import play_sound
 import time
 import os
 from components.chat.chat_window import ChatWindow
+import subprocess
+from gui.terminal import Terminal
 
 def parse_command(response: str):
     if '```' not in response:
@@ -37,10 +39,14 @@ def parse_command(response: str):
 
 
 def execute_command():
+    print("execute command")
     tasks = current_tasks_array.get()
+    terminal_instance = Terminal.instance()  # Get the Terminal instance
     for index, task in enumerate(tasks):
         task_string = task["command"]
-        os.system(task_string)
+        result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)  # Capture command output
+        output = result.stdout + result.stderr  # Combine stdout and stderr
+        terminal_instance.update_output(output)  # Update the Terminal output
         tasks[index]["complete"] = True
         current_tasks_array.set(tasks)  # Set the current_tasks_array after each iteration
         play_sound("task_complete")
@@ -50,3 +56,4 @@ def execute_command():
     work_mode.set(False)
     play_sound("complete")
     current_tasks_array.set([])
+

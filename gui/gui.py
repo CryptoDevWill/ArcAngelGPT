@@ -28,6 +28,6 @@ class GUI:
 
         # Create the widgets
         master.title("ArcAngelAi")
-        master.geometry("950x600")
+        master.geometry("950x500")
         self.frame = ttk.Frame(master)
         self.frame.pack(fill='both', expand=True)
