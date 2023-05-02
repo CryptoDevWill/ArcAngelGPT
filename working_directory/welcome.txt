@@ -1,1 +1,1 @@
-Welcome to ArcAngelAI V2 (2.0.0)
+Welcome to ArcAngelAI, an autonomous helper for various AIs including ChatGPT.

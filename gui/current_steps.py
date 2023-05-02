@@ -40,12 +40,8 @@ class StepsBox(tk.LabelFrame, TaskObserver):
             widget.destroy()
 
         for index, step in enumerate(current_tasks_array.get()):
-            step_text = list(step.values())[0]
-            values_list = list(step.values())
-            if len(values_list) >= 2:
-                step_complete = values_list[1]
-            else:
-                step_complete = False
+            step_text = step["step"]
+            step_complete = step["complete"]
 
             if step_complete:
                 status_symbol = "✓"
@@ -59,6 +55,7 @@ class StepsBox(tk.LabelFrame, TaskObserver):
 
             status_label = tk.Label(self, text=status_symbol, bg='#2d2d2d', fg=status_color)
             status_label.grid(row=index, column=0, sticky="w", padx=10, pady=5)
+
 
 def create_steps_box(parent):
     return StepsBox(parent)

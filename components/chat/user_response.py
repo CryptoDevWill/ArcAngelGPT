@@ -1,6 +1,6 @@
 import tkinter as tk
 from data.conversation import conversation
-from data.global_variables import loading
+from data.global_variables import thinking
 from gui.current_steps import current_tasks_array
 from functions.play_sound import play_sound
 from tools.parse_command import parse_command
@@ -84,10 +84,12 @@ class UserResponse:
             self.char_counter.config(fg='#999999')
 
     def user_response(self, event):
-        if loading.get():
-             return print("please wait")
+        if thinking.get():
+            return print("please wait")
         else:
             user_input = self.user_input.get()
+            if not user_input:
+                return # exit function if user input is empty
             conversation.append({"role": "user", "content": user_input})
             self.chat_window.update_conversation()
             self.user_input.delete(0, 'end')
@@ -99,33 +101,29 @@ class UserResponse:
 
 def gpt_response(user_input, chat_window):
     try:
-        loading.set(True)
-        conversation.append({"role": "system", "content": "using only 'mkdir', 'touch', or 'echo', provide the commands needed to execute each task individually in the working_directory. Example ``` mkdir folder ```, ``` touch file.txt ```, ``` echo 'Hello,' > folder/file.txt"})
+        thinking.set(True)
+        conversation_length = len(conversation)
+        conversation.append({"role": "system", "content": "If the user is asking to execute commands then using only 'mkdir', 'touch', 'echo', 'rm', or 'mv', provide one set of commands needed to execute each task individually with no human interaction using absolute paths only NO 'cd'. Example ``` mkdir folder ```, ``` touch file.txt ```, ``` echo 'Hello,' > folder/file.txt."})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
+        conversation.pop(conversation_length)
         chat_response = completion.choices[0].message
-        print(chat_response)
         conversation.append({"role": "assistant", "content": chat_response.content})
+
+        if chat_response:
+            command = threading.Thread(target=parse_command, args=(chat_response.content,))
+            command.start()
+
     except openai.error.InvalidRequestError as e:
         error_message = "Error: " + str(e)
         conversation.append({"role": "assistant", "content": error_message})
+        thinking.set(False)
+    except openai.error.AuthenticationError as e:
+        error_message = "Error: " + str(e)
+        conversation.append({"role": "assistant", "content": error_message})
+        thinking.set(False)
     finally:
         chat_window.update_conversation()
         play_sound("response")
-        loading.set(False)
-        command = threading.Thread(target=parse_command, args=(chat_response.content,))
-        command.start()
-
-
- 
-
-# def arc_response(input):
-
-#     response = arc.chat(input)
-#     print(response)
-#     # current_tasks = response['message']['plan']  # Extract the plan from the response
-#     # current_tasks_array.set(current_tasks)
-#     # work_mode.set(True)
-#     # play_sound("work")
-
+        thinking.set(False)
 
 

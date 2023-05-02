@@ -16,8 +16,13 @@ def get_file_tree():
     YELLOW = "file"
     RESET = ""
 
+    exclude_folders = ["assets", "components", "data", "functions", "gui", "openai", "tools", "user_scripts", "utils", "screens", "__pycache__"]
+    exclude_files = ["LICENSE", "requirements.txt", "README.md", "run", "_main.py" ]
+
     for name in os.listdir(working_dir):
         if name.startswith('.'):  # skip hidden files and folders
+            continue
+        if name in exclude_folders or name in exclude_files:
             continue
         path = os.path.join(working_dir, name)
         if os.path.isdir(path):

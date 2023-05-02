@@ -9,7 +9,7 @@ from watchdog.events import FileSystemEventHandler
 class FileTree(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
-        self.tree_text = tk.Text(self, state=tk.DISABLED, width=100, bg='black', fg='white', highlightthickness=0, padx=10, pady=10)
+        self.tree_text = tk.Text(self, state=tk.DISABLED, width=70, bg='black', fg='white', highlightthickness=0, padx=10, pady=10)
         self.tree_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         # Define tags for colors

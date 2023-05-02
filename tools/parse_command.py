@@ -1,38 +1,52 @@
-import os
+import re
+from gui.current_steps import current_tasks_array
+from data.global_variables import thinking
 from data.global_variables import work_mode
 from functions.play_sound import play_sound
+import time
+import os
+from components.chat.chat_window import ChatWindow
 
-allowed_commands = [ "mkdir", "touch", "echo" ]
-
-def parse_command(text):
-    # Find object between the triple backticks
-    start = text.find("```")
-    if start == -1:
-        return None
-    end = text.find("```", start + 3)
-    if end == -1:
-        return None
-
-    play_sound("work")
-    # Extract the command
-    command_line = text[start+3:end].strip()
-    parts = command_line.split()
-    if len(parts) < 2:
-        work_mode.set(False)
-        return play_sound("error")
-
-    command = parts[0]
-    folder = parts[1]
-
-    # Check if the command is allowed
-    if command not in allowed_commands:
-        work_mode.set(False)
-        print(command + " not allowed")
-        return play_sound("error")
-
-    # Start work mode
+def parse_command(response: str):
+    if '```' not in response:
+        print("No commands found.")
+        return
     work_mode.set(True)
-    # Execute the command
-    os.system(f"{command} working_directory/{folder}")
-    play_sound("success")
+    chat_window = ChatWindow()  # Instantiate ChatWindow
+    chat_window.update_conversation()
+    allowed_commands = ["mkdir", "touch", "echo", "rm", "mv", "cat", "python", "node"]
+    pattern = r'```(.*?)```'
+    command_blocks = re.findall(pattern, response, re.DOTALL)
+    
+    commands = []
+    for block in command_blocks:
+        block_commands = block.strip().split('\n')
+        for cmd in block_commands:
+            cmd = cmd.strip()
+            if any(cmd.startswith(allowed_cmd) for allowed_cmd in allowed_commands):
+                commands.append(cmd)
+
+    command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(commands)]
+    current_tasks_array.set(command_dicts)
+    print(current_tasks_array.get())
+    execute_command()
+
+
+
+
+
+
+def execute_command():
+    tasks = current_tasks_array.get()
+    for index, task in enumerate(tasks):
+        task_string = task["command"]
+        os.system(task_string)
+        tasks[index]["complete"] = True
+        current_tasks_array.set(tasks)  # Set the current_tasks_array after each iteration
+        play_sound("task_complete")
+        # time.sleep(1)  # Delay for 3 seconds after each iteration
+
+    thinking.set(False)
     work_mode.set(False)
+    play_sound("complete")
+    current_tasks_array.set([])

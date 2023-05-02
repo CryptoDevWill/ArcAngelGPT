@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 import platform
 import psutil
+from functions.play_sound import play_sound
 
 load_dotenv()
 
@@ -46,12 +47,20 @@ forbidden_commands = "cd, nano, vi, vim, save, open, code"
 class WorkMode:
     def __init__(self):
         self.value = False
+        self.callbacks = []
 
     def set(self, state):
+        if state == True:
+            play_sound('work') # Call the play_sound() function with argument 'work'
         self.value = state
+        for callback in self.callbacks:
+            callback()
 
     def get(self):
         return self.value
+
+    def set_callback(self, callback):
+        self.callbacks.append(callback)
 
 work_mode = WorkMode()
 

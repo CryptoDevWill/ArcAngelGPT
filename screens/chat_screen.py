@@ -4,12 +4,16 @@ from components.chat.chat_window import ChatWindow
 from gui.current_steps import create_steps_box
 from gui.thinking_indicator import ThinkingIndicator
 from components.file_tree.file_tree import FileTree
-
+from modules.work_mode_label import WorkModeLabel
 
 
 class ChatScreen:
     def __init__(self, master):
         self.master = master
+        self.master.config(bg="#2d2d2d") # set background color of master widget
+
+        label = WorkModeLabel(self.master)
+        label.pack()
 
         # create a container frame for the chat window and user input field
         self.container = tk.Frame(self.master, bg='#2d2d2d', padx=10, pady=10)
@@ -43,7 +47,7 @@ class ChatScreen:
 
         # create the current steps box
         steps_box = create_steps_box(self.right_pane)
-        steps_box.pack(side='bottom', padx=10, pady=10)
+        steps_box.pack(side='top', padx=10, pady=10)
 
         # #Send initial system message to ChatGPT with a 1-second delay
         # self.master.after(500, lambda: _init(self.chat_window))
