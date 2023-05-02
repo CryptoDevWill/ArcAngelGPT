@@ -3,6 +3,8 @@ from functions.get_file_tree import get_file_tree
 import os
 import subprocess
 from pathlib import Path
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 class FileTree(tk.Frame):
     def __init__(self, master=None, **kwargs):
@@ -15,7 +17,6 @@ class FileTree(tk.Frame):
         self.tree_text.tag_configure("python_file", foreground="#1aa8e5")
         self.tree_text.tag_configure("js_file", foreground="#cbad00")
         self.tree_text.tag_configure("file", foreground="#babeba")
-
 
         # Bind callback functions
         self.tree_text.tag_bind("folder", "<Button-1>", self.open_folder)
@@ -35,6 +36,7 @@ class FileTree(tk.Frame):
         self.tree_text.tag_bind("file", "<Leave>", lambda e: self.tree_text.config(cursor=""))
 
         self.update_tree()
+        self.start_file_system_observer()
 
     def update_tree(self):
         tree_lines, tree_tags = get_file_tree()
@@ -46,7 +48,6 @@ class FileTree(tk.Frame):
             self.tree_text.insert(tk.END, line + '\n', (tag, path))
 
         self.tree_text.config(state=tk.DISABLED)
-
 
     def open_folder(self, event):
         tags = self.tree_text.tag_names(tk.CURRENT)
@@ -65,4 +66,16 @@ class FileTree(tk.Frame):
         elif os.name == 'posix':  # macOS and Linux
             subprocess.run(['open', folder_path])
 
+    def start_file_system_observer(self):
+        event_handler = FileSystemEventHandler()
+        event_handler.on_modified = self.on_file_system_modified
+        self.observer = Observer()
+        self.observer.schedule(event_handler, ".", recursive=True)
+        self.observer.start()
 
+    def on_file_system_modified(self, event):
+        self.update_tree()
+
+    def close(self):
+        self.observer.stop()
+        self.observer.join()

@@ -100,6 +100,7 @@ class UserResponse:
 def gpt_response(user_input, chat_window):
     try:
         loading.set(True)
+        conversation.append({"role": "system", "content": "using only 'mkdir', 'touch', or 'echo', provide the commands needed to execute each task individually in the working_directory. Example ``` mkdir folder ```, ``` touch file.txt ```, ``` echo 'Hello,' > folder/file.txt"})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         chat_response = completion.choices[0].message
         print(chat_response)
@@ -125,3 +126,6 @@ def gpt_response(user_input, chat_window):
 #     # current_tasks_array.set(current_tasks)
 #     # work_mode.set(True)
 #     # play_sound("work")
+
+
+

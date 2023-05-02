@@ -7,7 +7,7 @@ from components.file_tree.file_tree import FileTree
 
 
 
-class ArcScreen:
+class ChatScreen:
     def __init__(self, master):
         self.master = master
 

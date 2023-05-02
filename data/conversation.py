@@ -12,7 +12,7 @@ initial_system_prompt = {"role": "system", "content": (
     f"Your working directory is {working_directory}. "
     f"Your assigned user is {username}. "
     f"These are the files and folders in your working directory {get_file_tree()}"
-    "You are a terminal command line prompt executer."
+    "using only 'mkdir', 'touch', or 'echo', provide the commands needed to execute each task individually in the working_directory. Example ``` mkdir folder ```, ``` touch file.txt ```, ``` echo 'Hello,' > folder/file.txt"
 )}
 
 
