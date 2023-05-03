@@ -1,16 +1,13 @@
 import tkinter as tk
 from data.conversation import conversation
 from data.global_variables import thinking
-from gui.current_steps import current_tasks_array
 from functions.play_sound import play_sound
 from tools.parse_command import parse_command
 import threading
 import os
 import openai
-from arcangelai import Arc
-from data.global_variables import work_mode
+from modules.reset_conversation_button import reset_conversation_button
 
-arc = Arc({"key": "abc123", "name": "Arc"})
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -37,6 +34,9 @@ class UserResponse:
             validatecommand=(self.master.register(self.validate_input), '%P')
         )
         self.user_input.pack(side='left', fill='x', expand=True)
+        # Create and place the reset button
+        reset_button = reset_conversation_button(self.user_frame, chat_window)
+        reset_button.pack(side='right')
 
         # add a placeholder text
         self.user_input.insert(0, 'Enter your text here...')

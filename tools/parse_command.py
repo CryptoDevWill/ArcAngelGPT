@@ -44,6 +44,7 @@ def execute_command():
     terminal_instance = Terminal.instance()  # Get the Terminal instance
     for index, task in enumerate(tasks):
         task_string = task["command"]
+        print(task_string)
         result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)  # Capture command output
         output = result.stdout + result.stderr  # Combine stdout and stderr
         terminal_instance.update_output(output)  # Update the Terminal output

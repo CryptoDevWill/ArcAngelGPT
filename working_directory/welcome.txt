@@ -1,1 +1,0 @@
-Welcome to ArcAngelAI, an autonomous helper for various AIs including ChatGPT.
