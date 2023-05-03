@@ -103,7 +103,7 @@ def gpt_response(user_input, chat_window):
     try:
         thinking.set(True)
         conversation_length = len(conversation)
-        conversation.append({"role": "system", "content": "Please only give me answers in command prompt executable commands, that can be used in both linux and windows. Only give one command, and inclose the command in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard. Example ``` mkdir folder ```, ``` touch file.txt ```, ``` echo 'Hello,' > folder/file.txt."})
+        conversation.append({"role": "system", "content": "Please only give me answers in command prompt executable commands. Give me commands that will work on my Operating System. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard. Only use absolute paths. a new line character should be used, do not use \n"})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)
         chat_response = completion.choices[0].message
