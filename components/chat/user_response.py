@@ -110,7 +110,7 @@ def gpt_response(user_input, chat_window):
     try:
         thinking.set(True)
         conversation_length = len(conversation)
-        conversation.append({"role": "system", "content": f"The human is incapable of doing any commands that require human interaction. Always output non-interactive programming commands for server-side headless automation scripting. Use this absolute path {path} Give me commands that will work on my {myos}. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. Using python version {sys.version} when needed. This is the current file tree {get_file_tree()}"})
+        conversation.append({"role": "system", "content": f"Use this absolute path {path}. The human is incapable of doing any commands that require human interaction. Always output non-interactive programming commands for server-side headless automation scripting. Give me commands that will work on my {myos}. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. Using python version {sys.version} when needed. This is the current file tree {get_file_tree()}"})
         print(conversation)
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)
