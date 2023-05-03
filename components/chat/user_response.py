@@ -3,11 +3,7 @@ from data.conversation import conversation
 from data.global_variables import thinking, files_and_folders
 from functions.play_sound import play_sound
 from tools.parse_command import parse_command
-from functions.get_file_tree import get_file_tree
-import sys
 import threading
-import platform
-
 import os
 import openai
 from modules.reset_conversation_button import reset_conversation_button
@@ -103,14 +99,13 @@ class UserResponse:
             gpt_thread = threading.Thread(target=gpt_response, args=(user_input, self.chat_window))
             gpt_thread.start()
 
-
 path = os.getcwd() + "/working_directory"
-myos = platform.system() + " " + platform.release()
+
 def gpt_response(user_input, chat_window):
     try:
         thinking.set(True)
         conversation_length = len(conversation)
-        conversation.append({"role": "system", "content": f"Use this absolute path {path}. The human is incapable of doing any commands that require human interaction. Always output non-interactive programming commands for server-side headless automation scripting. Give me commands that will work on my {myos}. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. Using python version {sys.version} when needed. This is the current file tree {get_file_tree()}"})
+        conversation.append({"role": "system", "content": f"Always only use this {path} absolute path. Translate human text into non-interactive executable terminal command prompts. Give me commands that will work on my Operating System. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard."})
         print(conversation)
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)
