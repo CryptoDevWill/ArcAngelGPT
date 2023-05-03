@@ -35,7 +35,7 @@ def parse_command(response: str):
 
 
 
-must_have = "ArcAngelGPT/working_directory"
+# must_have = "ArcAngelGPT/working_directory"
 
 def execute_command():
     print("execute command")
