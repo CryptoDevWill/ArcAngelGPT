@@ -34,7 +34,7 @@ def get_file_tree():
                     if subname.endswith('.py'):
                         color = BLUE
                     elif subname.endswith('.js'):
-                        color = ORANGE
+                        color = "js_file"
                     tree_lines.append(f" - {subname}")
                     tree_tags.append((color, os.path.join(path, subname)))
         else:
@@ -42,7 +42,7 @@ def get_file_tree():
             if name.endswith('.py'):
                 color = BLUE
             elif name.endswith('.js'):
-                color = YELLOW
+                color = "js_file"
             tree_lines.append(f"{name}")
             tree_tags.append((color, os.path.join(working_dir, name)))
 
