@@ -43,16 +43,8 @@ def execute_command():
     terminal_instance = Terminal.instance()  # Get the Terminal instance
     for index, task in enumerate(tasks):
         task_string = task["command"]
-        
-        # Add debug print statements
-        print(f"task_string: {task_string}")
-        print(f"must_have: {must_have}")
-        
-        if must_have not in task_string:
-            play_sound('error')
-            work_mode.set(False)
-            raise Exception("wrong file path")
-        print(task_string)
+    
+    
         try:
             result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)  # Capture command output
             output = result.stdout + result.stderr  # Combine stdout and stderr
