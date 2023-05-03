@@ -11,8 +11,8 @@ initial_system_prompt = {"role": "system", "content": (
     f"The current time is {time}. "
     f"The current date is {date}. "
     f"The current type of Operating System is {os.name}."
-    f"Your working directory is {working_directory} this path has alredy been set and should be used at all times. "
     f"Your assigned user is {username}. "
+    f"Your working directory is {working_directory} this path has already been set and should be used at all times. "
     f"These are the files and folders in your working directory {get_file_tree()}"
 )}
 

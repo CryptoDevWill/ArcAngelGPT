@@ -1,6 +1,6 @@
 import tkinter as tk
 from data.conversation import conversation
-from data.global_variables import thinking
+from data.global_variables import thinking, working_directory
 from functions.play_sound import play_sound
 from tools.parse_command import parse_command
 import threading
@@ -92,6 +92,7 @@ class UserResponse:
                 return # exit function if user input is empty
             conversation.append({"role": "user", "content": user_input})
             self.chat_window.update_conversation()
+            print(conversation)
             self.user_input.delete(0, 'end')
             play_sound('send')
             # Execute Arc in a separate thread
@@ -103,7 +104,7 @@ def gpt_response(user_input, chat_window):
     try:
         thinking.set(True)
         conversation_length = len(conversation)
-        conversation.append({"role": "system", "content": "Please only give me answers in command prompt executable commands. Give me commands that will work on my Operating System. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard. Only use absolute paths. a new line character should be used, do not use \n"})
+        conversation.append({"role": "system", "content": "Use only absolute paths, Please only give me answers in command prompt executable commands. Give me commands that will work on my Operating System. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard. A new line character should be used, do not use \n"})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)
         chat_response = completion.choices[0].message
