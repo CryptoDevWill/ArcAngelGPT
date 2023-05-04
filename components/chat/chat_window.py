@@ -34,7 +34,7 @@ class ChatWindow(tk.Frame):
         start = self.conversation_text.index("sel.first")
         end = self.conversation_text.index("sel.last")
         self.conversation_text.tag_add("highlight", start, end)
-        self.conversation_text.tag_configure("highlight", background="#FFCC00")
+        self.conversation_text.tag_configure("highlight", background="#ffffff")
 
     def paste_text(self, event):
         pass
@@ -50,7 +50,7 @@ class ChatWindow(tk.Frame):
             content = msg['content']
             formatted_msg = f"{role.capitalize()}: {content}\n"
             self.conversation_text.insert(tk.END, formatted_msg, role)
-            self.conversation_text.tag_configure("user", background="#405068", foreground="white")
+            self.conversation_text.tag_configure("user", background="#1f1f1f", foreground="white")
             self.conversation_text.tag_configure("assistant", background="#2f3d4a", foreground="white")
             self.conversation_text.tag_configure("system", background="#2d2d2d", foreground="#ff9d00")
 

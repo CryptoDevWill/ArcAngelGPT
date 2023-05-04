@@ -3,17 +3,16 @@ from data.conversation import conversation
 from data.global_variables import thinking, files_and_folders
 from functions.play_sound import play_sound
 from tools.parse_command import parse_command
-from functions.get_file_tree import get_file_tree
-import sys
+from components.chat.gpt_response import gpt_response
 import threading
-import platform
-
 import os
 import openai
 from modules.reset_conversation_button import reset_conversation_button
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Added import
+from tkinter import Entry
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class UserResponse:
     def __init__(self, master, chat_window):
@@ -24,12 +23,30 @@ class UserResponse:
         self.user_frame = tk.Frame(self.master, bg='#2d2d2d')
         self.user_frame.pack(fill='x', padx=10, pady=10)
 
-        self.user_input = tk.Entry(
+        # Added URL Entry field
+        self.url_input = Entry(
             self.user_frame,
             borderwidth=0,
             highlightthickness=1,
             highlightcolor='#cccccc',
             font=('Helvetica', 14),
+            fg='white',
+            bg='#000000',
+            relief='flat',
+            insertbackground='white'
+        )
+        self.url_input.pack(side='top', fill='x', expand=True, pady=(0, 5))
+
+        # Add placeholder text for the URL input field
+        self.url_input.insert(0, 'URL')
+        self.url_input.config(fg='#bbbbbb')
+
+        self.user_input = tk.Entry(
+            self.user_frame,
+            borderwidth=0,
+            highlightthickness=1,
+            highlightcolor='#cccccc',
+            font=('Helvetica', 16),
             fg='white',
             bg='#2d2d2d',
             relief='flat',
@@ -60,7 +77,9 @@ class UserResponse:
 
         self.user_input.bind('<FocusIn>', on_focus)
         self.user_input.bind('<FocusOut>', on_unfocus)
-        self.user_input.bind('<Return>', self.user_response)
+        
+        # Modified binding for Return key
+        self.user_input.bind('<Return>', lambda event: self.fire_function_before_response())
 
         # add character counter
         self.char_counter = tk.Label(
@@ -87,13 +106,23 @@ class UserResponse:
         else:
             self.char_counter.config(fg='#999999')
 
-    def user_response(self, event):
+    def fire_function_before_response(self):
+        # Add your function call here before calling user_response
+        # example_function()
+
+        # Print input from the add_url_entry field
+        url_input = self.url_input.get()
+        print("URL input:", url_input)
+
+        self.user_response()
+
+    def user_response(self):
         if thinking.get():
             return print("please wait")
         else:
             user_input = self.user_input.get()
             if not user_input:
-                return # exit function if user input is empty
+                return  # exit function if user input is empty
             conversation.append({"role": "user", "content": user_input})
             self.chat_window.update_conversation()
             print(conversation)
@@ -103,35 +132,5 @@ class UserResponse:
             gpt_thread = threading.Thread(target=gpt_response, args=(user_input, self.chat_window))
             gpt_thread.start()
 
-
-path = os.getcwd() + "/working_directory"
-myos = platform.system() + " " + platform.release()
-def gpt_response(user_input, chat_window):
-    try:
-        thinking.set(True)
-        conversation_length = len(conversation)
-        conversation.append({"role": "system", "content": f"Use this absolute path {path}. The human is incapable of doing any commands that require human interaction. Always output non-interactive programming commands for server-side headless automation scripting. Give me commands that will work on my {myos}. Only give one command, do not give multiple examples. Enclose each response in ``` I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. Using python version {sys.version} when needed. This is the current file tree {get_file_tree()}"})
-        print(conversation)
-        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
-        conversation.pop(conversation_length)
-        chat_response = completion.choices[0].message
-        conversation.append({"role": "assistant", "content": chat_response.content})
-
-        if chat_response:
-            command = threading.Thread(target=parse_command, args=(chat_response.content,))
-            command.start()
-
-    except openai.error.InvalidRequestError as e:
-        error_message = "Error: " + str(e)
-        conversation.append({"role": "assistant", "content": error_message})
-        thinking.set(False)
-    except openai.error.AuthenticationError as e:
-        error_message = "Error: " + str(e)
-        conversation.append({"role": "assistant", "content": error_message})
-        thinking.set(False)
-    finally:
-        chat_window.update_conversation()
-        play_sound("response")
-        thinking.set(False)
 
 
