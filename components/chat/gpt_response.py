@@ -20,7 +20,6 @@ def gpt_response(user_input, chat_window):
         conversation.pop(conversation_length)
         chat_response = completion.choices[0].message
         conversation.append({"role": "assistant", "content": chat_response.content})
-
         if chat_response:
             command = threading.Thread(target=parse_command, args=(chat_response.content,))
             command.start()
