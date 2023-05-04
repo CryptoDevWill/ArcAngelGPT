@@ -32,14 +32,14 @@ class ChatScreen:
 
         # create the user response input field
         self.user_input = UserResponse(self.left_pane, self.chat_window)
-        self.user_input.user_input.configure(bg='#1e1e1e', fg='white', insertbackground='white')
+        self.user_input.user_input_field.user_input.configure(bg='#1e1e1e', fg='white', insertbackground='white')
 
         # Loading indicator
         self.loading_indicator = ThinkingIndicator(self.left_pane, bg='#2d2d2d', fg='white')
         self.loading_indicator.pack(side='bottom', padx=10, pady=10)
 
         # set focus to the user input field by default
-        self.user_input.user_input.focus()
+        self.user_input.user_input_field.user_input.focus()
 
         # create the file tree
         self.file_tree = FileTree(self.right_pane, bg='#2d2d2d')
@@ -54,4 +54,4 @@ class ChatScreen:
 
     def show(self):
         self.container.pack(fill='both', expand=True)
-        self.user_input.user_input.focus()
+        self.user_input.user_input_field.user_input.focus()
