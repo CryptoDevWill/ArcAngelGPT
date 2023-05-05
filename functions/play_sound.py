@@ -3,12 +3,17 @@ import sys
 import pygame
 
 
+
+def _resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath('.'), relative_path)
+
 def play_sound(sound_name, assets_path="assets/"):
     pygame.mixer.init()
 
     # Get the script's directory and join it with the assets_path
-    script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-    assets_dir = os.path.join(script_dir, assets_path)
+    assets_dir = _resource_path(assets_path)
 
     # Find the sound file in the given directory
     sound_path = None
