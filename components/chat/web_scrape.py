@@ -4,13 +4,20 @@ from data.conversation import conversation
 from data.global_variables import thinking
 from functions.play_sound import play_sound
 import openai
+import random
+import time
 
 
-#Fetch request and convert html to text
+# Fetch request and convert html to text
 def web_scrape(url, user_input, chat_window):
     thinking.set(True)
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'}
+    proxies = []  # Example proxie array [{'http': 'http://proxy1'}, {'http': 'http://proxy2'}, ...]
+
     try:
-        response = requests.get(url)
+        time.sleep(random.uniform(1, 5))
+        proxy = random.choice(proxies) if proxies else None
+        response = requests.get(url, headers=headers, proxies=proxy)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         text = soup.get_text()
