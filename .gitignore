@@ -5,7 +5,7 @@
 /training_data
 /dist
 /build
-/main.spec
+*.spec
 /scraps.txt
 /arc_model
 /venv
