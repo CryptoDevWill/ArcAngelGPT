@@ -8,23 +8,33 @@ import subprocess
 from gui.terminal import Terminal
 
 def parse_command(response: str):
-    if '```' not in response:
-        print("No commands found.")
-        return
-    work_mode.set(True)
-    chat_window = ChatWindow()  # Instantiate ChatWindow
-    chat_window.update_conversation()
     allowed_commands = ["mkdir", "touch", "echo", "rm", "mv", "cat", "python", "node"]
     pattern = r'```(.*?)```'
     command_blocks = re.findall(pattern, response, re.DOTALL)
-    
-    commands = []
-    for block in command_blocks:
-        block_commands = block.strip().split('\n')
-        for cmd in block_commands:
-            cmd = cmd.strip()
+
+    if not command_blocks:
+        commands = []
+        response_lines = response.split('\n')
+        for line in response_lines:
+            cmd = line.strip()
             if any(cmd.startswith(allowed_cmd) for allowed_cmd in allowed_commands):
                 commands.append(cmd)
+        
+        if not commands:
+            print("No commands found.")
+            return
+    else:
+        commands = []
+        for block in command_blocks:
+            block_commands = block.strip().split('\n')
+            for cmd in block_commands:
+                cmd = cmd.strip()
+                if any(cmd.startswith(allowed_cmd) for allowed_cmd in allowed_commands):
+                    commands.append(cmd)
+
+    work_mode.set(True)
+    chat_window = ChatWindow()  # Instantiate ChatWindow
+    chat_window.update_conversation()
 
     command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(commands)]
     current_tasks_array.set(command_dicts)
