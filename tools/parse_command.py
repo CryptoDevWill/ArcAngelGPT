@@ -3,8 +3,6 @@ from gui.current_steps import current_tasks_array
 from data.global_variables import thinking
 from data.global_variables import work_mode
 from functions.play_sound import play_sound
-import time
-import os
 from components.chat.chat_window import ChatWindow
 import subprocess
 from gui.terminal import Terminal
@@ -35,7 +33,6 @@ def parse_command(response: str):
 
 
 
-# must_have = "ArcAngelGPT/working_directory"
 
 def execute_command():
     print("execute command")
