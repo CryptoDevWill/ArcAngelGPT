@@ -68,9 +68,13 @@ def execute_command():
     print("execute command")
     tasks = current_tasks_array.get()
     terminal_instance = Terminal.instance()  # Get the Terminal instance
+    is_posix = os.name == 'posix'
 
     for index, task in enumerate(tasks):
         task_string = task["command"]
+
+        if not is_posix:
+            task_string = convert_to_cmd_command(task_string)
 
         try:
             result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)  # Capture command output
