@@ -22,7 +22,7 @@ def parse_command(response: str):
 
     pattern = r'```(.*?)```'
     command_blocks = re.findall(pattern, response, re.DOTALL)
-    
+
     commands = []
     for block in command_blocks:
         block_commands = block.strip().split('\n')
@@ -33,11 +33,16 @@ def parse_command(response: str):
                     cmd = convert_to_cmd_command(cmd)
                 commands.append(cmd)
 
-    command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(commands)]
+    converted_commands = []
+    for cmd in commands:
+        if os.name != 'posix':
+            cmd = convert_to_cmd_command(cmd)
+        converted_commands.append(cmd)
+
+    command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(converted_commands)]
     current_tasks_array.set(command_dicts)
     print(current_tasks_array.get())
     execute_command()
-
 
 
 def convert_to_cmd_command(command: str):
@@ -59,6 +64,7 @@ def convert_to_cmd_command(command: str):
         return f"type {file_name}"
     else:
         return command
+
 
 
 
