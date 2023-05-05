@@ -1,5 +1,5 @@
 import tkinter as tk
-from functions.get_file_tree import get_file_tree
+from components.file_tree.get_file_tree import get_file_tree
 import os
 import subprocess
 from pathlib import Path
