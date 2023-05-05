@@ -3,38 +3,55 @@ from bs4 import BeautifulSoup
 from data.conversation import conversation
 from data.global_variables import thinking
 from functions.play_sound import play_sound
+from utils.token_counter import get_tokenz
 import openai
-import random
-import time
+import re
 
 
-# Fetch request and convert html to text
 def web_scrape(url, user_input, chat_window):
     thinking.set(True)
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'}
-    proxies = []  # Example proxie array [{'http': 'http://proxy1'}, {'http': 'http://proxy2'}, ...]
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Screen-Size': '1920x1080'
+        }
+
+    proxy_url = None  # Set to your proxy address when needed
 
     try:
-        time.sleep(random.uniform(1, 5))
-        proxy = random.choice(proxies) if proxies else None
-        response = requests.get(url, headers=headers, proxies=proxy)
+        if proxy_url:
+            proxies = {'http': proxy_url, 'https': proxy_url}
+        else:
+            proxies = None
+
+        response = requests.get(url, headers=headers, proxies=proxies)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         text = soup.get_text()
-        image_links = [img['src'] for img in soup.find_all('img')]
-        return gpt_webscrape_response(url, user_input, text, image_links, chat_window)
+
+        # Preprocess text to remove unnecessary whitespace
+        text = re.sub(r'\s+', ' ', text).strip()
+
+        get_tokenz(text, conversation, chat_window, thinking, play_sound)
+        conversation.append({"role": "assistant", "content": "Browsing the link now. please wait.."})
+        chat_window.update_conversation()
+        play_sound('response')
+        return gpt_webscrape_response(url, user_input, text, chat_window)
     except requests.exceptions.RequestException as e:
         conversation.append({"role": "assistant", "content": e})
         chat_window.update_conversation()
         play_sound('error')
-        return thinking.set(False)
+        thinking.set(False)
+
+
+
 
    
 #Send web text to chatgpt
-def gpt_webscrape_response(url, user_input, text, image_links, chat_window):
+def gpt_webscrape_response(url, user_input, text, chat_window):
     thinking.set(True)
     try:
-        prompt = f"{user_input}. This is the url {url} and this is the content -> '{text}'\n\nImage Links: {', '.join(image_links)}"
+        prompt = f"{user_input}. This is the url {url} and this is the content -> '{text}'"
         completion = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
