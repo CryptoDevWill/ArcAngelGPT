@@ -55,7 +55,10 @@ def convert_to_cmd_command(command: str):
         return command
     elif command.startswith("rm"):
         file_name = command.split(" ")[1]
-        return f"del {file_name}"
+        if os.name == 'posix':
+            return f"rm -r {file_name}"
+        else:
+            return f"rd /s /q {file_name}"
     elif command.startswith("mv"):
         old_name, new_name = command.split(" ")[1:]
         return f"move {old_name} {new_name}"
@@ -64,6 +67,7 @@ def convert_to_cmd_command(command: str):
         return f"type {file_name}"
     else:
         return command
+
 
 
 
