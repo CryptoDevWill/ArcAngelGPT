@@ -4,7 +4,7 @@ from colorama import init, Fore, Style
 def get_file_tree():
     init(autoreset=True)  # Automatically reset color after each print
 
-    working_dir = "working_directory"
+    working_dir = os.getcwd()
 
     tree_lines = []
     tree_tags = []
@@ -16,7 +16,7 @@ def get_file_tree():
     YELLOW = "file"
     RESET = ""
 
-    exclude_folders = ["assets", "components", "data", "functions", "gui", "openai", "tools", "user_scripts", "utils", "screens", "__pycache__"]
+    exclude_folders = ["assets", "components", "data", "functions", "gui", "openai", "tools", "user_scripts", "utils", "screens", "__pycache__", "modules", "main.py"]
     exclude_files = ["LICENSE", "requirements.txt", "README.md", "run", "_main.py" ]
 
     for name in os.listdir(working_dir):

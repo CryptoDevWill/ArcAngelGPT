@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from data.global_variables import username, working_directory
-from functions.get_file_tree import get_file_tree
+from components.file_tree.get_file_tree import get_file_tree
 from utils.get_current_time_date import get_current_time_date
 import sys
 load_dotenv()
@@ -14,8 +14,7 @@ initial_system_prompt = {"role": "system", "content": (
     f"The current type of Operating System is {os.name}."
     f"Your Python version is {sys.version}"
     f"Your assigned user is {username}. "
-    f"Your working directory is {working_directory}. "
-    f"These are the files and folders in your working directory {get_file_tree()}"
+    f"These are the files and folders {get_file_tree()}"
 )}
 
 
