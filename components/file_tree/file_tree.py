@@ -4,7 +4,7 @@ import os
 import subprocess
 from pathlib import Path
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.events import FileSystemEventHandler, FileCreatedEvent
 
 class FileTree(tk.Frame):
     def __init__(self, master=None, **kwargs):
@@ -67,8 +67,7 @@ class FileTree(tk.Frame):
             subprocess.run(['open', folder_path])
 
     def start_file_system_observer(self):
-        event_handler = FileSystemEventHandler()
-        event_handler.on_modified = self.on_file_system_modified
+        event_handler = CustomFileSystemEventHandler(self)
         self.observer = Observer()
         self.observer.schedule(event_handler, ".", recursive=True)
         self.observer.start()
@@ -79,3 +78,14 @@ class FileTree(tk.Frame):
     def close(self):
         self.observer.stop()
         self.observer.join()
+
+class CustomFileSystemEventHandler(FileSystemEventHandler):
+    def __init__(self, file_tree):
+        self.file_tree = file_tree
+
+    def on_modified(self, event):
+        self.file_tree.on_file_system_modified(event)
+
+    def on_created(self, event):
+        self.file_tree.on_file_system_modified(event)
+
