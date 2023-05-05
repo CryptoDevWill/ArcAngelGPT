@@ -1,7 +1,7 @@
 import os
 import pygame
 
-def play_sound(sound_name, assets_path="assets"):
+def play_sound(sound_name, assets_path="assets/"):
     pygame.mixer.init()
 
     # Find the sound file in the given directory
