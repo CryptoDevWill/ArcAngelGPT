@@ -27,7 +27,7 @@ class UserInput:
         self.char_counter = tk.Label(
             self.master,
             text=f'0/{self.max_input_length}',
-            font=('Helvetica', 14),
+            font=('Helvetica', 12),
             fg='#999999',
             bg='#2d2d2d'
         )

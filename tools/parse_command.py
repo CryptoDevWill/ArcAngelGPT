@@ -51,7 +51,7 @@ def convert_to_cmd_command(command: str):
     elif command.startswith("touch"):
         file_name = command.split(" ")[1]
         return f"type nul > {file_name}"
-    elif command.startswith("echo"):
+    elif command.startswith("echo"): 
         return command
     elif command.startswith("rm"):
         file_name = command.split(" ")[1]

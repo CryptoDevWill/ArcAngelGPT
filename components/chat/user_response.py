@@ -10,9 +10,9 @@ from components.chat.reset_button_module import ResetButtonModule
 import threading
 
 
-class UserResponse:
+class UserResponse(tk.Frame):  # Inherit from tk.Frame
     def __init__(self, master, chat_window):
-        self.master = master
+        super().__init__(master, bg='#2d2d2d')  # Call the parent class constructor
         self.chat_window = chat_window
         self.max_input_length = 100
         self.char_count = 0

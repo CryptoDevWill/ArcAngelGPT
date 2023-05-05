@@ -10,21 +10,25 @@ from modules.work_mode_label import WorkModeLabel
 class ChatScreen:
     def __init__(self, master):
         self.master = master
-        self.master.config(bg="#2d2d2d") # set background color of master widget
+        self.master.config(bg="#2d2d2d")
 
         label = WorkModeLabel(self.master)
         label.pack()
 
         # create a container frame for the chat window and user input field
-        self.container = tk.Frame(self.master, bg='#2d2d2d', padx=10, pady=10)
+        self.container = tk.PanedWindow(self.master, bg='#2d2d2d', sashrelief='raised', sashwidth=5)
         self.container.pack(fill='both', expand=True)
 
         # create left and right side panes
         self.left_pane = tk.Frame(self.container, bg='#2d2d2d')
         self.right_pane = tk.Frame(self.container, bg='#2d2d2d')
 
-        self.left_pane.pack(side='left', fill='both', expand=True)
-        self.right_pane.pack(side='right', fill='y', expand=False)
+        self.container.add(self.left_pane)
+        self.container.add(self.right_pane)
+
+        # Set minimum size and initial width for right pane
+        self.right_pane.config(width=200)
+        self.container.paneconfigure(self.right_pane, minsize=200)
 
         # create the chat window
         self.chat_window = ChatWindow(self.left_pane, bg='#1e1e1e', bd=1, relief='solid')
@@ -33,6 +37,7 @@ class ChatScreen:
         # create the user response input field
         self.user_input = UserResponse(self.left_pane, self.chat_window)
         self.user_input.user_input_field.user_input.configure(bg='#1e1e1e', fg='white', insertbackground='white')
+        self.user_input.pack(side='bottom', fill='x', padx=10, pady=10)
 
         # Loading indicator
         self.loading_indicator = ThinkingIndicator(self.left_pane, bg='#2d2d2d', fg='white')
@@ -48,9 +53,6 @@ class ChatScreen:
         # create the current steps box
         steps_box = create_steps_box(self.right_pane)
         steps_box.pack(side='top', padx=10, pady=10)
-
-        # #Send initial system message to ChatGPT with a 1-second delay
-        # self.master.after(500, lambda: _init(self.chat_window))
 
     def show(self):
         self.container.pack(fill='both', expand=True)
