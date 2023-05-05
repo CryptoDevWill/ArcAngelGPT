@@ -55,8 +55,8 @@ def gpt_webscrape_response(url, user_input, text, chat_window):
         completion = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
-            max_tokens=1500,
-            temperature=0
+            max_tokens=2000,
+            temperature=0.3
         )
         response = completion.choices[0]['text']
         conversation.append({"role": "assistant", "content": response})
