@@ -35,25 +35,26 @@ def parse_command(response: str):
 
 
 
-def convert_to_powershell_command(command: str):
+def convert_to_cmd_command(command: str):
     if command.startswith("mkdir"):
         return command
     elif command.startswith("touch"):
         file_name = command.split(" ")[1]
-        return f"New-Item -ItemType file -Name {file_name}"
+        return f"type nul > {file_name}"
     elif command.startswith("echo"):
         return command
     elif command.startswith("rm"):
         file_name = command.split(" ")[1]
-        return f"Remove-Item {file_name}"
+        return f"del {file_name}"
     elif command.startswith("mv"):
         old_name, new_name = command.split(" ")[1:]
-        return f"Move-Item {old_name} {new_name}"
+        return f"move {old_name} {new_name}"
     elif command.startswith("cat"):
         file_name = command.split(" ")[1]
-        return f"Get-Content {file_name}"
+        return f"type {file_name}"
     else:
         return command
+
 
 def execute_command():
     print("execute command")
@@ -65,7 +66,7 @@ def execute_command():
         task_string = task["command"]
 
         if not is_posix:
-            task_string = convert_to_powershell_command(task_string)
+            task_string = convert_to_cmd_command(task_string)
 
         try:
             result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)  # Capture command output
@@ -82,6 +83,7 @@ def execute_command():
     work_mode.set(False)
     play_sound("complete")
     current_tasks_array.set([])
+
 
 
 
