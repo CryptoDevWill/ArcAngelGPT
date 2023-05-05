@@ -44,21 +44,17 @@ def parse_command(response: str):
     print(current_tasks_array.get())
     execute_command()
 
-
 def convert_to_cmd_command(command: str):
     if command.startswith("mkdir"):
         return command
     elif command.startswith("touch"):
         file_name = command.split(" ")[1]
-        return f"type nul > {file_name}"
+        return f"echo. > {file_name}"
     elif command.startswith("echo"): 
         return command
     elif command.startswith("rm"):
         file_name = command.split(" ")[1]
-        if os.name == 'posix':
-            return f"rm -r {file_name}"
-        else:
-            return f"rd /s /q {file_name}"
+        return f"rmdir /s /q {file_name}" if os.path.isdir(file_name) else f"del /f /q {file_name}"
     elif command.startswith("mv"):
         old_name, new_name = command.split(" ")[1:]
         return f"move {old_name} {new_name}"
@@ -67,12 +63,6 @@ def convert_to_cmd_command(command: str):
         return f"type {file_name}"
     else:
         return command
-
-
-
-
-
-
 
 def execute_command():
     print("execute command")
@@ -101,7 +91,4 @@ def execute_command():
     work_mode.set(False)
     play_sound("complete")
     current_tasks_array.set([])
-
-
-
 
