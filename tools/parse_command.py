@@ -35,39 +35,16 @@ def parse_command(response: str):
 
 
 
-def convert_to_cmd_command(command: str):
-    if command.startswith("mkdir"):
-        return command
-    elif command.startswith("touch"):
-        file_name = command.split(" ")[1]
-        return f"type nul > {file_name}"
-    elif command.startswith("echo"):
-        return command
-    elif command.startswith("rm"):
-        file_name = command.split(" ")[1]
-        return f"del {file_name}"
-    elif command.startswith("mv"):
-        old_name, new_name = command.split(" ")[1:]
-        return f"move {old_name} {new_name}"
-    elif command.startswith("cat"):
-        file_name = command.split(" ")[1]
-        return f"type {file_name}"
-    else:
-        return command
-
+# must_have = "ArcAngelGPT/working_directory"
 
 def execute_command():
     print("execute command")
     tasks = current_tasks_array.get()
     terminal_instance = Terminal.instance()  # Get the Terminal instance
-    is_posix = os.name == 'posix'
-
     for index, task in enumerate(tasks):
         task_string = task["command"]
-
-        if not is_posix:
-            task_string = convert_to_cmd_command(task_string)
-
+    
+    
         try:
             result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)  # Capture command output
             output = result.stdout + result.stderr  # Combine stdout and stderr
@@ -83,7 +60,6 @@ def execute_command():
     work_mode.set(False)
     play_sound("complete")
     current_tasks_array.set([])
-
 
 
 
