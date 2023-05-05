@@ -1,5 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
+import sys
+import os
+
+def _resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.dirname(sys.argv[0]), relative_path)
 
 class GUI:
     def __init__(self, master):
@@ -29,5 +36,8 @@ class GUI:
         # Create the widgets
         master.title("ArcAngelAI")
         master.geometry("950x600")
+        # Set the window icon
+        icon_path = _resource_path("assets/images/icon.ico")
+        master.iconbitmap(icon_path)
         self.frame = ttk.Frame(master)
         self.frame.pack(fill='both', expand=True)
