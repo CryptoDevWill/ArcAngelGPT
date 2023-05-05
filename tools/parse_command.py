@@ -29,12 +29,15 @@ def parse_command(response: str):
         for cmd in block_commands:
             cmd = cmd.strip()
             if any(cmd.startswith(allowed_cmd) for allowed_cmd in allowed_commands):
+                if os.name != 'posix':
+                    cmd = convert_to_cmd_command(cmd)
                 commands.append(cmd)
 
     command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(commands)]
     current_tasks_array.set(command_dicts)
     print(current_tasks_array.get())
     execute_command()
+
 
 
 def convert_to_cmd_command(command: str):
@@ -65,13 +68,9 @@ def execute_command():
     print("execute command")
     tasks = current_tasks_array.get()
     terminal_instance = Terminal.instance()  # Get the Terminal instance
-    is_posix = os.name == 'posix'
 
     for index, task in enumerate(tasks):
         task_string = task["command"]
-
-        if not is_posix:
-            task_string = convert_to_cmd_command(task_string)
 
         try:
             result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)  # Capture command output
