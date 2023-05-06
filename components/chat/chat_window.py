@@ -47,12 +47,14 @@ class ChatWindow(tk.Frame):
 
         for msg in conversation[1:]:
             role = msg['role']
+            if role == 'system':
+                continue
             content = msg['content']
             formatted_msg = f"{role.capitalize()}: {content}\n"
             self.conversation_text.insert(tk.END, formatted_msg, role)
             self.conversation_text.tag_configure("user", background="#1f1f1f", foreground="white")
             self.conversation_text.tag_configure("assistant", background="#2f3d4a", foreground="white")
-            self.conversation_text.tag_configure("system", background="#2d2d2d", foreground="#ff9d00")
 
         self.conversation_text.see(tk.END)
         self.conversation_text.config(state=tk.DISABLED)
+
