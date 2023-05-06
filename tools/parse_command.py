@@ -6,6 +6,8 @@ from data.global_variables import thinking, work_mode
 from functions.play_sound import play_sound
 from gui.terminal import Terminal
 
+
+
 def parse_command(response: str):
     if '```' not in response:
         print("No commands found.")
@@ -22,13 +24,24 @@ def parse_command(response: str):
         block_commands = block.strip().split('\n')
         for cmd in block_commands:
             cmd = cmd.strip()
-            chained_commands = cmd.split('&&')
-            for chained_cmd in chained_commands:
-                chained_cmd = chained_cmd.strip()
-                cmd_parts = chained_cmd.split(' ')
+            if '&&' in cmd:
+                chained_commands = cmd.split('&&')
+                for chained_cmd in chained_commands:
+                    chained_cmd = chained_cmd.strip()
+                    cmd_parts = re.split(r'\s+', chained_cmd, maxsplit=1)
+                    cmd_base = cmd_parts[0]
+                    if any(cmd_base == allowed_cmd for allowed_cmd in allowed_commands):
+                        commands.append(chained_cmd)
+                    else:
+                        print(f"Error: '{cmd_base}' command is not allowed.")
+                        play_sound('error')
+                        work_mode.set(False)
+                        return
+            else:
+                cmd_parts = re.split(r'\s+', cmd, maxsplit=1)
                 cmd_base = cmd_parts[0]
                 if any(cmd_base == allowed_cmd for allowed_cmd in allowed_commands):
-                    commands.append(chained_cmd)
+                    commands.append(cmd)
                 else:
                     print(f"Error: '{cmd_base}' command is not allowed.")
                     play_sound('error')
@@ -39,6 +52,8 @@ def parse_command(response: str):
     current_tasks_array.set(command_dicts)
     print(current_tasks_array.get())
     execute_command()
+
+
 
 
 

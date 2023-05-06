@@ -3,6 +3,7 @@ from data.conversation import conversation
 from data.global_variables import thinking
 from functions.play_sound import play_sound
 from tools.parse_command import parse_command
+from components.file_tree.get_file_tree import get_file_tree
 import threading
 import os
 import openai
@@ -15,7 +16,7 @@ def gpt_response(user_input, chat_window):
     try:
         thinking.set(True)
         conversation_length = len(conversation)
-        conversation.append({"role": "system", "content": f"Translate human text into non-interactive executable terminal command prompts. Only give one command, do not give multiple examples. Enclose each response in tripple back ticks. I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard."})
+        conversation.append({"role": "system", "content": f"Your file tree is {get_file_tree()}Translate human text into non-interactive executable terminal command prompts. Only give one command, do not give multiple examples. Enclose each response in triple back ticks. I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard."})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)
         chat_response = completion.choices[0].message
