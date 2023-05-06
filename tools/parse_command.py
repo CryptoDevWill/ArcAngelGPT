@@ -34,11 +34,11 @@ def parse_command(response: str):
     execute_command()
 
 def convert_to_cmd_command(command: str):
-    if os.name != 'posix' and command.startswith("touch"):
+    if command.startswith("touch"):
         file_name = command.split(" ")[1]
-        return f"echo. > {file_name}"
-    else:
-        return command
+        if os.name != 'posix':
+            return f"echo. > {file_name}"
+    return command
 
 def execute_command():
     tasks = current_tasks_array.get()
