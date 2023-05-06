@@ -16,7 +16,7 @@ def get_file_tree():
     YELLOW = "file"
     RESET = ""
 
-    exclude_folders = ["ArcAngelAI.exe","assets", "components", "data", "venv", "functions", "gui", "dist", "build", "openai", "tools", "user_scripts", "utils", "screens", "__pycache__", "modules", "main.py"]
+    exclude_folders = ["assets", "components", "data", "venv", "functions", "gui", "dist", "build", "openai", "tools", "user_scripts", "utils", "screens", "__pycache__", "modules", "main.py"]
     exclude_files = ["ArcAngelAI.exe","LICENSE", "requirements.txt", "README.md", "run", "_main.py", "main.spec", "mac_setup.py" ]
 
     for name in os.listdir(working_dir):
