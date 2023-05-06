@@ -1,6 +1,5 @@
 import re
 import os
-import subprocess
 
 from gui.current_steps import current_tasks_array
 from data.global_variables import thinking, work_mode
@@ -13,9 +12,7 @@ def parse_command(response: str):
         return
     work_mode.set(True)
 
-    allowed_commands_unix = ["mkdir", "touch", "echo"]
-    allowed_commands_windows = ["mkdir", "echo"]
-    allowed_commands = allowed_commands_unix if os.name == 'posix' else allowed_commands_windows
+    allowed_commands = ["mkdir", "touch", "echo", "mv", "rm"]
 
     pattern = r'```(.*?)```'
     command_blocks = re.findall(pattern, response, re.DOTALL)
@@ -25,41 +22,84 @@ def parse_command(response: str):
         block_commands = block.strip().split('\n')
         for cmd in block_commands:
             cmd = cmd.strip()
-            if any(cmd.startswith(allowed_cmd) for allowed_cmd in allowed_commands):
-                cmd = convert_to_cmd_command(cmd)
-                commands.append(cmd)
+            chained_commands = cmd.split('&&')
+            for chained_cmd in chained_commands:
+                chained_cmd = chained_cmd.strip()
+                cmd_parts = chained_cmd.split(' ')
+                cmd_base = cmd_parts[0]
+                if any(cmd_base == allowed_cmd for allowed_cmd in allowed_commands):
+                    commands.append(chained_cmd)
+                else:
+                    print(f"Error: '{cmd_base}' command is not allowed.")
+                    play_sound('error')
+                    work_mode.set(False)
+                    return
 
     command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(commands)]
     current_tasks_array.set(command_dicts)
+    print(current_tasks_array.get())
     execute_command()
 
-def convert_to_cmd_command(command: str):
-    if command.startswith("touch"):
-        file_name = command.split(" ")[1]
-        if os.name != 'posix':
-            return f"echo. > {file_name}"
-    return command
+
+
+def remove_directory(path):
+    for item in os.listdir(path):
+        item_path = os.path.join(path, item)
+        if os.path.isfile(item_path):
+            os.remove(item_path)
+        elif os.path.isdir(item_path):
+            remove_directory(item_path)
+    os.rmdir(path)
+
 
 def execute_command():
     tasks = current_tasks_array.get()
-    terminal_instance = Terminal.instance()
-    is_posix = os.name == 'posix'
-
     for index, task in enumerate(tasks):
-        task_string = task["command"]
-
-        if not is_posix:
-            task_string = convert_to_cmd_command(task_string)
+        command_parts = task["command"].split(' ')
+        command, args = command_parts[0], command_parts[1:]
 
         try:
-            result = subprocess.run(task_string, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-            output = result.stdout + result.stderr
-        except subprocess.CalledProcessError as e:
-            output = e.stderr
-        terminal_instance.update_output(output)
+            if command == "mkdir":
+                os.mkdir(args[0])
+            elif command == "touch":
+                with open(args[0], 'a'):
+                    os.utime(args[0], None)
+            elif command == "echo":
+                if ">>" in args:
+                    target_file = args[args.index(">>") + 1]
+                    content = " ".join(args[:args.index(">>")])
+                    with open(target_file, 'a') as file:
+                        file.write(f"{content}\n")
+                elif ">" in args:
+                    target_file = args[args.index(">") + 1]
+                    content = " ".join(args[:args.index(">")])
+                    with open(target_file, 'w') as file:
+                        file.write(f"{content}\n")
+                else:
+                    print(" ".join(args))
+            elif command == "mv":
+                destination = args[1] if not os.path.isdir(args[1]) else os.path.join(args[1], os.path.basename(args[0]))
+                os.rename(args[0], destination)
+            elif command == "rm":
+                if "-rf" in args:
+                    target_path = args[args.index("-rf") + 1]
+                    if os.path.isdir(target_path):
+                        remove_directory(target_path)
+                    else:
+                        print(f"Error: {target_path} is not a directory")
+                elif "-r" in args:
+                    target_path = args[args.index("-r") + 1]
+                    if os.path.isdir(target_path):
+                        remove_directory(target_path)
+                    else:
+                        print(f"Error: {target_path} is not a directory")
+                else:
+                    os.remove(args[0])
+        except Exception as e:
+            print(f"Error: {e}")
+
         tasks[index]["complete"] = True
         current_tasks_array.set(tasks)
-        play_sound("task_complete")
 
     thinking.set(False)
     work_mode.set(False)
