@@ -49,7 +49,7 @@ def convert_to_cmd_command(command: str):
         return command
     elif command.startswith("touch"):
         file_name = command.split(" ")[1]
-        return f"copy NUL {file_name}"
+        return f"type NUL > {file_name}" if not os.path.exists(file_name) else command
     elif command.startswith("echo"): 
         return command
     elif command.startswith("rm"):
@@ -63,6 +63,7 @@ def convert_to_cmd_command(command: str):
         return f"type {file_name}"
     else:
         return command
+
 
 
 def execute_command():
