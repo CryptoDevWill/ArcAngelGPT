@@ -45,24 +45,12 @@ def parse_command(response: str):
     execute_command()
 
 def convert_to_cmd_command(command: str):
-    if command.startswith("mkdir"):
-        return command
-    elif command.startswith("touch"):
+    if command.startswith("touch"):
         file_name = command.split(" ")[1]
-        return f"type NUL > {file_name}" if not os.path.exists(file_name) else command
-    elif command.startswith("echo"): 
-        return command
-    elif command.startswith("rm"):
-        file_name = command.split(" ")[1]
-        return f"rmdir /s /q {file_name}" if os.path.isdir(file_name) else f"del /f /q {file_name}"
-    elif command.startswith("mv"):
-        old_name, new_name = command.split(" ")[1:]
-        return f"move {old_name} {new_name}"
-    elif command.startswith("cat"):
-        file_name = command.split(" ")[1]
-        return f"type {file_name}"
+        return f"echo. > {file_name}"
     else:
         return command
+
 
 
 
