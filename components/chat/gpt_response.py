@@ -11,7 +11,6 @@ import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-prpmot = ""
 
 def gpt_response(user_input, chat_window):
     try:
