@@ -92,9 +92,11 @@ ArcAngelGPT can perform a variety of tasks, including:
 5. Create new folders:
     - ArcAngelGPT can create new folders in its directory.
 
-## Coming soon
 6. Delete folders and files:
     - ArcAngelGPT can delete specific folders and files from its directory.
+
+7. Url Scraping
+    - Scrape urls and organize the information how you want. 
 
 
 ## License
