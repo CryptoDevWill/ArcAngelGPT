@@ -8,7 +8,7 @@ def open_file(label):
         with open(file_path, "r") as file:
             content = file.read()
         print(f"File: {file_path}\nContent:\n{content}")
-        label.config(text="File uploaded successfully!", foreground="#aab0b6")
+        label.config(text="File read!", foreground="#aab0b6")
 
 def upload_button(parent):
     style = ttk.Style()
