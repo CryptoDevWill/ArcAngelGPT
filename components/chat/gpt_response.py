@@ -11,12 +11,18 @@ import openai
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+prpmot = ""
 
 def gpt_response(user_input, chat_window):
     try:
         thinking.set(True)
         conversation_length = len(conversation)
-        conversation.append({"role": "system", "content": f"Your file tree is {get_file_tree()}Translate human text into non-interactive executable terminal command prompts. Only give one command, do not give multiple examples. Enclose each response in triple back ticks. I do not want any advice or notes or anything that cannot be directly copied and pasted into a terminal session. You are to act like a computer in this regard."})
+        conversation.append({"role": "system", "content": (
+                                f"Your file tree is {get_file_tree()}. For each interaction, provide a single command or instruction. "
+                                "The AI will respond with one non-interactive terminal command per request, enclosed in triple backticks ``` for clarity. "
+                                "Commands will be executable in a terminal session without requiring any additional explanation or input. "
+                                "The AI will act as a computer providing terminal commands only, without any advice or notes. "
+                                )})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)
         chat_response = completion.choices[0].message

@@ -7,6 +7,7 @@ from components.chat.web_scrape import web_scrape
 from components.chat.url_input_module import UrlInput
 from components.chat.user_input_module import UserInput
 from components.chat.reset_button_module import ResetButtonModule
+from modules.file_upload import upload_button
 import threading
 
 
@@ -27,6 +28,9 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
 
         # Create and place the reset button
         reset_button = ResetButtonModule(self.user_frame, chat_window)
+
+        upload_button(self.user_frame)
+        
 
     def user_response(self, event=None):  # Added event parameter with a default value of None
         # Reject call if still thinking
