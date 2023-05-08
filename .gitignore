@@ -11,3 +11,4 @@
 /venv
 /.eggs
 /mac_setup.py
+.vscode/launch.json

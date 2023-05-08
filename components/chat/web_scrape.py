@@ -9,39 +9,79 @@ import re
 
 
 def web_scrape(url, user_input, chat_window):
-    thinking.set(True)
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Screen-Size': '1920x1080'
-        }
+    if not url.startswith("http://") and not url.startswith("https://"):
+        # Try with http://
+        http_url = "http://" + url
+        https_url = "https://" + url
+        for url in [http_url, https_url]:
+            try:
+                thinking.set(True)
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                    'Screen-Size': '1920x1080'
+                    }
 
-    proxy_url = None  # Set to your proxy address when needed
+                proxy_url = None  # Set to your proxy address when needed
 
-    try:
-        if proxy_url:
-            proxies = {'http': proxy_url, 'https': proxy_url}
-        else:
-            proxies = None
+                if proxy_url:
+                    proxies = {'http': proxy_url, 'https': proxy_url}
+                else:
+                    proxies = None
 
-        response = requests.get(url, headers=headers, proxies=proxies)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
-        text = soup.get_text()
+                response = requests.get(url, headers=headers, proxies=proxies)
+                response.raise_for_status()
+                soup = BeautifulSoup(response.text, 'html.parser')
+                text = soup.get_text()
 
-        # Preprocess text to remove unnecessary whitespace
-        text = re.sub(r'\s+', ' ', text).strip()
+                # Preprocess text to remove unnecessary whitespace
+                text = re.sub(r'\s+', ' ', text).strip()
 
-        get_tokenz(text, conversation, chat_window, thinking, play_sound)
-        conversation.append({"role": "assistant", "content": "Browsing the link now. please wait.."})
-        chat_window.update_conversation()
-        play_sound('response')
-        return gpt_webscrape_response(url, user_input, text, chat_window)
-    except requests.exceptions.RequestException as e:
-        conversation.append({"role": "assistant", "content": e})
-        chat_window.update_conversation()
-        play_sound('error')
-        thinking.set(False)
+                get_tokenz(text, conversation, chat_window, thinking, play_sound)
+                conversation.append({"role": "assistant", "content": "Browsing the link now. please wait.."})
+                chat_window.update_conversation()
+                play_sound('response')
+                return gpt_webscrape_response(url, user_input, text, chat_window)
+            except requests.exceptions.RequestException:
+                pass
+
+        # If none of the URLs worked, raise an exception
+        raise Exception(f"Could not connect to {url}")
+    else:
+        # URL includes a protocol, so proceed as before
+        try:
+            thinking.set(True)
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Screen-Size': '1920x1080'
+                }
+
+            proxy_url = None  # Set to your proxy address when needed
+
+            if proxy_url:
+                proxies = {'http': proxy_url, 'https': proxy_url}
+            else:
+                proxies = None
+
+            response = requests.get(url, headers=headers, proxies=proxies)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, 'html.parser')
+            text = soup.get_text()
+
+            # Preprocess text to remove unnecessary whitespace
+            text = re.sub(r'\s+', ' ', text).strip()
+
+            get_tokenz(text, conversation, chat_window, thinking, play_sound)
+            conversation.append({"role": "assistant", "content": "Browsing the link now. please wait.."})
+            chat_window.update_conversation()
+            play_sound('response')
+            return gpt_webscrape_response(url, user_input, text, chat_window)
+        except requests.exceptions.RequestException as e:
+            conversation.append({"role": "assistant", "content": e})
+            chat_window.update_conversation()
+            play_sound('error')
+            thinking.set(False)
 
 
 
