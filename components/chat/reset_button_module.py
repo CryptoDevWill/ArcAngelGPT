@@ -1,7 +1,6 @@
 from tkinter import ttk, Frame
 from data.conversation import conversation, initial_system_prompt
 
-
 def reset(chat_window):
     print("Reset button clicked!")
     conversation.clear()
@@ -14,14 +13,18 @@ def remove_latest_message(chat_window):
         conversation.pop(-1)
         chat_window.update_conversation()
 
-class ResetButtonModule(Frame):  # Renamed class
+class ResetButtonModule(Frame):
     def __init__(self, parent, chat_window):
         super().__init__(parent)
 
-        reset_button = ttk.Button(self, text="Reset", command=lambda: reset(chat_window))
+        style = ttk.Style()
+        style.configure("BurntOrange.TButton", foreground="#ffffff", background="#cc5500")
+        style.map("BurntOrange.TButton", background=[("active", "#cc5500"), ("pressed", "#cc5500"), ("!disabled", "#cc5500")])
+
+        reset_button = ttk.Button(self, text="Reset", command=lambda: reset(chat_window), style="BurntOrange.TButton")
         reset_button.pack(side='right', padx=(0, 5))
 
-        back_button = ttk.Button(self, text="Back", command=lambda: remove_latest_message(chat_window))
+        back_button = ttk.Button(self, text="Back", command=lambda: remove_latest_message(chat_window), style="BurntOrange.TButton")
         back_button.pack(side='right')
 
         chat_window.update_conversation()

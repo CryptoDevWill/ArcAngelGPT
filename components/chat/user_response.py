@@ -35,16 +35,8 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         
 
     def user_response(self, event=None):  # Added event parameter with a default value of None
-        # Reject call if still thinking
-        if thinking.get():
-            return print("please wait")
-
         user_input = self.user_input_field.user_input.get()
         url_input = self.url_input_field.url_input.get()
-
-        # Reject call if no user input
-        if not user_input:
-            return print("Enter user input")
 
         # Append user input
         conversation.append({"role": "user", "content": user_input})
@@ -52,6 +44,18 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         self.user_input_field.user_input.delete(0, 'end')
         self.url_input_field.url_input.delete(0, 'end')
         play_sound('send')
+
+        # Reject call if still thinking
+        if thinking.get():
+            conversation.append({"role": "user", "content": "I am thinking, please wait a moment.."})
+            self.chat_window.update_conversation()
+            play_sound('system')
+            return
+
+
+        # Reject call if no user input
+        if not user_input:
+            return print("Enter user input")
 
         # Read more
         if read_mode.get():

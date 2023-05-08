@@ -3,8 +3,9 @@ from tkinter import filedialog
 from tkinter import ttk
 from data.conversation import conversation
 from functions.play_sound import play_sound
-from data.global_variables import read_mode
+from data.global_variables import read_mode, work_mode, thinking
 from modules.process_chunks import process_chunks
+from modules.response_chunks import response_chunks
 import openai
 
 
@@ -36,7 +37,7 @@ def upload_button(parent):
     style.configure("TLabel", background="#282a2d", foreground="#aab0b6")
 
     upload_button = ttk.Button(parent, text="Upload File", style="Blue.TButton", command=lambda: open_file(parent.clear_button))
-    upload_button.pack(side=tk.LEFT, padx=(0, 10))
+    upload_button.pack(side=tk.RIGHT, padx=(0, 1))
 
     parent.clear_button = ttk.Button(parent, text="X", style="Red.TButton", width=1, command=lambda: clear_read_mode(parent.clear_button))
     # Don't pack the clear_button here, it will be packed when read_mode is set to True
@@ -46,8 +47,11 @@ def upload_button(parent):
 def upload_response(user_input, chat_window):
     content = read_mode.content
     read_mode.set(False)
+    work_mode.set(True)
+    thinking.set(True)
     try:
-        response = process_chunks(user_input, content)
+        chunks = process_chunks(user_input, content)
+        response = response_chunks(chunks, chat_window)
         conversation.append({"role": "assistant", "content": response})
         play_sound("response")
     except openai.error.InvalidRequestError as e:
@@ -59,4 +63,6 @@ def upload_response(user_input, chat_window):
         conversation.append({"role": "assistant", "content": error_message})
         play_sound("error")
     finally:
+        work_mode.set(False)
+        thinking.set(False)
         chat_window.update_conversation()

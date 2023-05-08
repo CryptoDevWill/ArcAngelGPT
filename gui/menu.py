@@ -8,7 +8,7 @@ from screens.settings_screen import SettingsScreen
 class Menu:
     def __init__(self, master):
         self.master = master
-        master.title("ArcAngelAI V2 (beta) 2.0.0")
+        master.title("ArcAngelAI V2 (beta) 2.0.1")
 
         # Set menu bar background color
         self.master.config(bg='#2d2d2d')
