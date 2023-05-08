@@ -91,3 +91,25 @@ class Loading:
 
 loading = Loading()
 
+
+
+class ReadMode:
+    def __init__(self):
+        self.value = False
+        self.callbacks = []
+
+    def set(self, state):
+        if state == True:
+            play_sound('system') 
+        self.value = state
+        for callback in self.callbacks:
+            callback()
+
+    def get(self):
+        return self.value
+
+    def set_callback(self, callback):
+        self.callbacks.append(callback)
+
+read_mode = ReadMode()
+

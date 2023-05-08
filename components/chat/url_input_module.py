@@ -1,4 +1,5 @@
 import tkinter as tk
+from data.global_variables import read_mode
 
 class UrlInput:
     def __init__(self, master):
@@ -12,7 +13,7 @@ class UrlInput:
         self.url_label = tk.Label(
             self.url_frame,
             text='URL:',
-            font=('Helvetica', 14),
+            font=('Helvetica', 13),
             fg='white',
             bg='#2d2d2d'
         )

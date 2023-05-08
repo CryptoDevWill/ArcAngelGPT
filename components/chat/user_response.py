@@ -7,7 +7,8 @@ from components.chat.web_scrape import web_scrape
 from components.chat.url_input_module import UrlInput
 from components.chat.user_input_module import UserInput
 from components.chat.reset_button_module import ResetButtonModule
-from modules.file_upload import upload_button
+from modules.file_upload import upload_button, upload_response
+from data.global_variables import read_mode
 import threading
 
 
@@ -26,9 +27,10 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         # User input module
         self.user_input_field = UserInput(self.user_frame, self.user_response)
 
-        # Create and place the reset button
-        reset_button = ResetButtonModule(self.user_frame, chat_window)
+        # Reset and back button
+        ResetButtonModule(self.user_frame, chat_window)
 
+        #Upload file button
         upload_button(self.user_frame)
         
 
@@ -51,6 +53,10 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         self.url_input_field.url_input.delete(0, 'end')
         play_sound('send')
 
+        # Read more
+        if read_mode.get():
+            return threading.Thread(target=upload_response, args=(user_input, self.chat_window)).start()
+
         # Redirect to webscrape if url
         if url_input:
             return threading.Thread(target=web_scrape, args=(url_input, user_input, self.chat_window)).start()
@@ -58,4 +64,3 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         # GPT response
         if not url_input:
             return threading.Thread(target=gpt_response, args=(user_input, self.chat_window)).start()
-
