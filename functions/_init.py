@@ -4,8 +4,11 @@ from data.conversation import conversation
 from functions.play_sound import play_sound
 from functions.speak import speak
 from data.global_variables import loading
+from utils.load_settings import load_settings
+
 
 def _init(chat_window):
+    load_settings()
     openai.api_key = os.environ.get("OPENAI_API_KEY")
     completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",

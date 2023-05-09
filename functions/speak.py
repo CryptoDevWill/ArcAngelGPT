@@ -2,8 +2,9 @@ import os
 import tempfile
 from gtts import gTTS
 from playsound import playsound
+from utils.load_settings import load_settings
 
-mute_speech = False
+mute_speech = load_settings.mute_speech
 
 def speak(text):
     if mute_speech:

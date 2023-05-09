@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from components.settings.mute_speech import MuteSpeech
 from components.settings.handle_api_key import HandleAPIKey
+from utils.load_settings import load_settings
 
 
 class SettingsScreen:
@@ -10,7 +11,10 @@ class SettingsScreen:
         self.frame.pack(fill='both', expand=True)
 
         self.handle_api_key = HandleAPIKey(self.frame)
-        self.mute_speech = MuteSpeech(self.frame)
+        self.settings = load_settings()
+
+        self.mute_speech = MuteSpeech(self.frame, self.settings)
+        self.mute_speech.pack()
 
     def show(self):
         self.frame.lift()
