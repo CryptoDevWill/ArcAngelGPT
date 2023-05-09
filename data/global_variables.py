@@ -15,8 +15,11 @@ global root_directory_path
 root_directory_path = os.getcwd()
 
 global working_directory
-working_directory = os.getcwd() + "/working_directory"
+working_directory = os.path.join(os.getcwd(), "working_directory")
 
+if not os.path.exists(working_directory):
+    os.makedirs(working_directory)
+    
 global operating_system
 operating_system = platform.system() + " " + platform.release()
 
