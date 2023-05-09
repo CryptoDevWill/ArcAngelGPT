@@ -1,0 +1,7 @@
+{
+    "api_key": "",
+    "mute_speech": false,
+    "default_voice": "en-US",
+    "output_voice_speed": 1.0,
+    "working_directory": "C:\\Users\\onead\\Documents\\GitHub\\ArcAngelGPT/working_directory"
+}

@@ -1,7 +1,7 @@
 import tkinter as tk
-from gui.gui import GUI
-from gui.menu import Menu
-from screens.load_screen import show_loading_screen
+from view.gui.gui import GUI
+from view.gui.menu import Menu
+from view.screens.load_screen import show_loading_screen
 
 
 class ArcAngelGPT:
