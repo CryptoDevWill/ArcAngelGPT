@@ -1,4 +1,4 @@
-# ArcAngelGPT
+# ArcAngelAI
 ArcAngelGPT is an AI agent powered by GPT-3.5-turbo, designed to assist you in various tasks and conversations.
 
 ## Contributors
