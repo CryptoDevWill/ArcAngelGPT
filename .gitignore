@@ -12,3 +12,5 @@
 /.eggs
 /mac_setup.py
 .vscode/launch.json
+settings.json
+/working_directory
