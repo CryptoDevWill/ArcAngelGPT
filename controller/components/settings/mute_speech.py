@@ -10,7 +10,7 @@ class MuteSpeech:
 
     def save_settings(self):
         settings = {'mute_speech': self.mute_speech}
-        with open('data/settings.json', 'w') as f:
+        with open('settings.json', 'w') as f:
             json.dump(settings, f)
 
     def pack(self, **kwargs):
