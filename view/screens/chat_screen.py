@@ -1,10 +1,10 @@
 import tkinter as tk
-from controller.components.chat.user_response import UserResponse
-from controller.components.chat.chat_window import ChatWindow
+from view.gui.user_response import UserResponse
+from view.gui.chat_window import ChatWindow
 from view.gui.current_steps import create_steps_box
 from view.gui.thinking_indicator import ThinkingIndicator
-from controller.components.file_tree.file_tree import FileTree
-from controller.modules.work_mode_label import WorkModeLabel
+from view.gui.file_tree import FileTree
+from view.gui.work_mode_label import WorkModeLabel
 
 
 class ChatScreen:

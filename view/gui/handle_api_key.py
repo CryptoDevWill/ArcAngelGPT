@@ -2,7 +2,7 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 from dotenv import find_dotenv
-from controller.components.settings.restart_popup import show_restart_popup
+from view.gui.restart_popup import show_restart_popup
 
 class HandleAPIKey:
     def __init__(self, master):

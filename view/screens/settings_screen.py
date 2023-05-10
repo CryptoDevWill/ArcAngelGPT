@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from controller.components.settings.mute_speech import MuteSpeech
-from controller.components.settings.handle_api_key import HandleAPIKey
+from view.gui.mute_speech import MuteSpeech
+from view.gui.handle_api_key import HandleAPIKey
 from controller.utils.load_settings import load_settings
 
 

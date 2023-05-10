@@ -4,8 +4,8 @@ from tkinter import ttk
 from controller.data.conversation import conversation
 from controller.play_sound import play_sound
 from controller.data.global_variables import read_mode, work_mode, thinking
-from controller.modules.process_chunks import process_chunks
-from controller.modules.response_chunks import response_chunks
+from model.file_uploads.process_chunks import process_chunks
+from model.file_uploads.response_chunks import response_chunks
 import openai
 
 
