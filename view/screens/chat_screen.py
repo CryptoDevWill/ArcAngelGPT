@@ -1,9 +1,9 @@
 import tkinter as tk
 from view.gui.user_response import UserResponse
-from view.gui.chat_window import ChatWindow
-from view.gui.current_steps import create_steps_box
-from view.gui.thinking_indicator import ThinkingIndicator
-from view.gui.file_tree import FileTree
+from view.gui.chat_window.chat_window import ChatWindow
+from view.gui.chat_window.current_steps import create_steps_box
+from view.gui.chat_window.thinking_indicator import ThinkingIndicator
+from view.gui.chat_window.file_tree import FileTree
 from view.gui.work_mode_label import WorkModeLabel
 
 

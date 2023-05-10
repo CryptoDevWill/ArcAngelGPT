@@ -1,10 +1,10 @@
 import re
 import os
 
-from view.gui.current_steps import current_tasks_array
+from view.gui.chat_window.current_steps import current_tasks_array
 from controller.data.global_variables import thinking, work_mode
 from controller.play_sound import play_sound
-from view.gui.terminal import Terminal
+from view.gui.terminal_window.terminal import Terminal
 
 
 

@@ -4,9 +4,9 @@ from controller.data.global_variables import thinking
 from controller.play_sound import play_sound
 from controller.components.chat.gpt_response import gpt_response
 from controller.components.chat.web_scrape import web_scrape
-from view.gui.url_input_module import UrlInput
-from view.gui.user_input_module import UserInput
-from view.gui.reset_button_module import ResetButtonModule
+from view.gui.chat_window.url_input_module import UrlInput
+from view.gui.chat_window.user_input_module import UserInput
+from view.gui.chat_window.reset_button_module import ResetButtonModule
 from model.file_uploads.file_upload import upload_button, upload_response
 from controller.data.global_variables import read_mode
 import threading

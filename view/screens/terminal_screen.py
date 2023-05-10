@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
 from dotenv import load_dotenv
-from view.gui.terminal import Terminal  # Import the Terminal class
+from view.gui.terminal_window.terminal import Terminal  # Import the Terminal class
 
 load_dotenv()
 
