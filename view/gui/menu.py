@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from view.screens.chat_screen import ChatScreen
-from view.screens.details_screen import DetailsScreen
-from view.screens.terminal_screen import TerminalScreen
-from view.screens.settings_screen import SettingsScreen
+from view.gui.chat_window.chat_screen import ChatScreen
+from view.gui.details_window.details_screen import DetailsScreen
+from view.gui.terminal_window.terminal_screen import TerminalScreen
+from view.gui.settings_window.settings_screen import SettingsScreen
 
 class Menu:
     def __init__(self, master):
