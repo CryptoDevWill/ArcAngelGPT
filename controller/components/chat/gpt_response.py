@@ -51,7 +51,7 @@ def gpt_response(user_input, chat_window):
         conversation.append({"role": "assistant", "content": error_message})
         Thinking().set(False)
     finally:
-        chat_window.update_conversation()
+        #chat_window.update_conversation()
         play_sound("response")
         Thinking().set(False)
 
