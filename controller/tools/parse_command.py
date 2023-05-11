@@ -43,7 +43,7 @@ def parse_command(response: str):
             Terminal().update_output(answer + "\n")
             conversation = Conversation()
             conversation.append({"role": "assistant", "content": answer})
-            ChatWindow.update_conversation()
+            ChatWindow().update_conversation()
             work_mode.set(False)
             return
         if "command" in data:

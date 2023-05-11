@@ -1,8 +1,10 @@
 import tkinter as tk
+
+from base import Instance
 from controller.data.conversation import Conversation
 
 
-class ChatWindow(tk.Frame):
+class ChatWindow(tk.Frame, metaclass=Instance):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 
