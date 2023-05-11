@@ -60,7 +60,9 @@ def execute_command():
     tasks = current_tasks_array.get()
     for index, task in enumerate(tasks):
         command_parts = task["command"].split(' ')
-        command = command_parts[0]
+        #attempt to fix stupid newlines in windows.
+        if command_parts[0] == "echo":
+            task["command"] = re.sub(r"(?m)^echo", "printf", task["command"])
         result = subprocess.run(task["command"], shell=True, capture_output=True)
         output = result.stdout.decode()
         Terminal.instance().update_output(task["command"] + "\n")
