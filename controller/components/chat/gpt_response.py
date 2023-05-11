@@ -18,6 +18,16 @@ def gpt_response(user_input, chat_window):
         conversation_length = len(conversation)
         conversation.append({"role": "system", "content": (
                                 f"Your file tree is {get_file_tree()}. The Operating system is {os.name}."
+                                f"You will not get any terminal input from a user for any command."
+                                f"You must use the following structure:\n"
+                                f"{{\n"
+                                f"    \"commands\": [\n"
+                                f"        {{\n"
+                                f"            \"command\": \"command to execute\",\n"
+                                f"            \"description\": \"description of command\"\n"
+                                f"        }}\n"
+                                f"    ],\n"
+                                f"}}"
                                 )})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)

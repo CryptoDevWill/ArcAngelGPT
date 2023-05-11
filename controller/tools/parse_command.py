@@ -11,22 +11,35 @@ from view.gui.terminal_window.terminal import Terminal
 
 def parse_command(response: str):
     work_mode.set(True)
-    find_json = re.search(r'{(.*?)}', response, re.DOTALL)
-    commands = []
-    if find_json:
-        data = json.loads(find_json.group(0)) # use .group(0) to get the matched string
-        print(data)
-        if "command" in data:
-            os.system(data["command"])
-        if "commands" in data:
-            for command in data["commands"]:
-                os.system(command["command"]) # use command["command"] to execute each command
-    else:
+    start_delim = '{'
+    end_delim = '}'
+    try:
+        start_index = response.index(start_delim)
+        end_index = response.rindex(end_delim) + len(end_delim)
+    except ValueError:
+        print(f"Error: could not find start or end delimiter in response: {response}")
+        work_mode.set(False)
         return
 
+    json_str = response[start_index:end_index]
+    if not json_str:
+        print(f"Error: extracted JSON string is empty in response: {response}")
+        work_mode.set(False)
+        return
+    
+    try:
+        data = json.loads(json_str)
+    except json.JSONDecodeError:
+        print(f"Error: failed to parse JSON in response: {response}")
+        work_mode.set(False)
+        return
 
-
-
+    if "commands" in data:
+        commands = data["commands"]
+        for command in commands:
+            if "command" in command:
+                os.system(command["command"])
+    work_mode.set(False)
 
 def remove_directory(path):
     for item in os.listdir(path):
