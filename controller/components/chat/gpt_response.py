@@ -17,7 +17,7 @@ def gpt_response(user_input, chat_window):
         thinking.set(True)
         conversation_length = len(conversation)
         conversation.append({"role": "system", "content": (
-                                f"Your file tree is {get_file_tree()}. The Operating system is {os.name}."
+                                f"Your file tree is {get_file_tree()}. The Operating system is {os.name}, so please only include commands that are compatible with my OS.\n"
                                 f"You will not get any terminal input from a user for any command."
                                 f"You must use the following structure:\n"
                                 f"{{\n"
@@ -28,6 +28,7 @@ def gpt_response(user_input, chat_window):
                                 f"        }}\n"
                                 f"    ],\n"
                                 f"}}"
+                                f"Do not use more than one json response in a single message."
                                 )})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)

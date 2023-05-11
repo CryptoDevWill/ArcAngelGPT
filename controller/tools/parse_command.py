@@ -63,9 +63,11 @@ def execute_command():
         command = command_parts[0]
         result = subprocess.run(task["command"], shell=True, capture_output=True)
         output = result.stdout.decode()
+        Terminal.instance().update_output(task["command"] + "\n")
         tasks[index]["output"] = output
         Terminal.instance().update_output(output)
         tasks[index]["complete"] = True
+        Terminal.instance().update_output(f"Step {index+1} complete \n")
         current_tasks_array.set(tasks)
 
     thinking.set(False)
