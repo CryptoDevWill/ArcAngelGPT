@@ -1,6 +1,6 @@
 import tkinter as tk
 from controller.data.conversation import Conversation
-from controller.data.global_variables import thinking
+from controller.data.global_variables import Thinking
 from controller.play_sound import play_sound
 from controller.tools.parse_command import parse_command
 from controller.components.file_tree.get_file_tree import get_file_tree
@@ -13,9 +13,9 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def gpt_response(user_input, chat_window):
-    conversation = Conversation.instance()
+    conversation = Conversation()
     try:
-        thinking.set(True)
+        Thinking().set(True)
         conversation_length = len(conversation)
         conversation.append({"role": "system", "content": (
                                 f"Your file tree is {get_file_tree()}. The Operating system is {os.name}, "
@@ -45,14 +45,14 @@ def gpt_response(user_input, chat_window):
     except openai.error.InvalidRequestError as e:
         error_message = "Error: " + str(e)
         conversation.append({"role": "assistant", "content": error_message})
-        thinking.set(False)
+        Thinking().set(False)
     except openai.error.AuthenticationError as e:
         error_message = "Error: " + str(e)
         conversation.append({"role": "assistant", "content": error_message})
-        thinking.set(False)
+        Thinking().set(False)
     finally:
         chat_window.update_conversation()
         play_sound("response")
-        thinking.set(False)
+        Thinking().set(False)
 
 

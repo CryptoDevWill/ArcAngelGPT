@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from controller.data.conversation import Conversation
-from controller.data.global_variables import thinking
+from controller.data.global_variables import Thinking
 from controller.play_sound import play_sound
 from controller.utils.token_counter import get_tokenz
 import openai
@@ -9,7 +9,8 @@ import re
 
 
 def web_scrape(url, user_input, chat_window):
-    conversation = Conversation.instance()
+    conversation = Conversation()
+    thinking = Thinking()
     if not url.startswith("http://") and not url.startswith("https://"):
         # Try with http://
         http_url = "http://" + url
@@ -85,12 +86,10 @@ def web_scrape(url, user_input, chat_window):
             thinking.set(False)
 
 
-
-
-   
-#Send web text to chatgpt
 def gpt_webscrape_response(url, user_input, text, chat_window):
-    conversation = Conversation.instance()
+    # Send web text to chatgpt
+    conversation = Conversation()
+    thinking = Thinking()
     thinking.set(True)
     try:
         prompt = f"{user_input}. This is the url {url} and this is the content -> '{text}'"

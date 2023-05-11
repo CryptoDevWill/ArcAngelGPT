@@ -1,5 +1,4 @@
 import tkinter as tk
-from controller.data.global_variables import read_mode
 
 class UrlInput:
     def __init__(self, master):

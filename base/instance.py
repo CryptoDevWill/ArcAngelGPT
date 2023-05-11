@@ -10,6 +10,6 @@ class Instance(abc.ABCMeta, type):
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
-            print(f"Creating {cls} instance")
+            print(f"Creating {cls.__name__} instance...")
             cls._instances[cls] = super(Instance, cls).__call__(*args, **kwargs)
         return cls._instances[cls]

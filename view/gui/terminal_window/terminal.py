@@ -2,18 +2,12 @@ import tkinter as tk
 import tkinter.font as tkfont
 import tkinter.ttk as ttk
 
-class Terminal:
-    _instance = None
+from base import Instance
 
-    @classmethod
-    def instance(cls, master=None):
-        if cls._instance is None and master is not None:
-            cls._instance = cls(master)
-        return cls._instance
 
-    def __init__(self, master):
-        if Terminal._instance is not None:
-            raise RuntimeError("Only one instance of Terminal is allowed.")
+class Terminal(metaclass=Instance):
+
+    def __init__(self, master=None):
         self.frame = ttk.Frame(master)
         self.frame.pack(fill='both', expand=True)
 

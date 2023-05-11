@@ -6,9 +6,10 @@ from controller.play_sound import play_sound
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
 def response_chunks(chunks, chat_window):
     print('its moving main')
-    conversation = Conversation.instance()
+    conversation = Conversation()
     try:
         combined_response = ""
         total_chunks = len(chunks)

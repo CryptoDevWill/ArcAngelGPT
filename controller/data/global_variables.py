@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 import os
 import platform
 import psutil
+
+from base import Instance
 from controller.play_sound import play_sound
 
 load_dotenv()
@@ -46,8 +48,7 @@ global forbbiden_commands
 forbidden_commands = "cd, nano, vi, vim, save, open, code"
 
 
-
-class WorkMode:
+class WorkMode(metaclass=Instance):
     def __init__(self):
         self.value = False
         self.callbacks = []
@@ -65,10 +66,11 @@ class WorkMode:
     def set_callback(self, callback):
         self.callbacks.append(callback)
 
-work_mode = WorkMode()
+
+WorkMode()
 
 
-class Thinking:
+class Thinking(metaclass=Instance):
     def __init__(self):
         self.value = False
 
@@ -78,11 +80,11 @@ class Thinking:
     def get(self):
         return self.value
 
-thinking = Thinking()
+
+Thinking()
 
 
-
-class Loading:
+class Loading(metaclass=Instance):
     def __init__(self):
         self.value = False
 
@@ -92,11 +94,11 @@ class Loading:
     def get(self):
         return self.value
 
-loading = Loading()
+
+Loading()
 
 
-
-class ReadMode:
+class ReadMode(metaclass=Instance):
     def __init__(self):
         self.value = False
         self.callbacks = []
@@ -114,5 +116,5 @@ class ReadMode:
     def set_callback(self, callback):
         self.callbacks.append(callback)
 
-read_mode = ReadMode()
 
+ReadMode()

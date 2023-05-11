@@ -1,6 +1,7 @@
 import tkinter as tk
 from controller.data.conversation import Conversation
 
+
 class ChatWindow(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
@@ -44,7 +45,7 @@ class ChatWindow(tk.Frame):
         self.conversation_text.delete(1.0, tk.END)
         self.conversation_text.configure(bg='#1e1e1e')
 
-        for msg in Conversation.instance()[1:]:
+        for msg in Conversation()[1:]:
             role = msg['role']
             if role == 'system':
                 continue

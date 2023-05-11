@@ -4,15 +4,15 @@ import json
 import subprocess
 from view.gui.chat_window.chat_window import ChatWindow
 
-from view.gui.chat_window.current_steps import current_tasks_array
-from controller.data.global_variables import thinking, work_mode
+from view.gui.chat_window.current_steps import CurrentTasksArray
+from controller.data.global_variables import WorkMode, Thinking
 from controller.play_sound import play_sound
 from view.gui.terminal_window.terminal import Terminal
 from controller.data.conversation import Conversation
 
 
-
 def parse_command(response: str):
+    work_mode = WorkMode()
     work_mode.set(True)
     start_delim = '{'
     end_delim = '}'
@@ -40,8 +40,8 @@ def parse_command(response: str):
     if "commands" in data:
         if "answer" in data:
             answer = data["answer"]
-            Terminal.instance().update_output(answer + "\n")
-            conversation = Conversation.instance()
+            Terminal().update_output(answer + "\n")
+            conversation = Conversation()
             conversation.append({"role": "assistant", "content": answer})
             ChatWindow.update_conversation()
             work_mode.set(False)
@@ -51,7 +51,7 @@ def parse_command(response: str):
             command_dicts = [{"step": f"Step {i+1}: {command['description']}", "command": command['command'], "complete": False} for i, command in enumerate(commands)]        
             for command_dict in command_dicts:
                 process.append(command_dict["command"])
-            current_tasks_array.set(command_dicts)
+            CurrentTasksArray().set(command_dicts)
             execute_command()
     work_mode.set(False)
 
@@ -67,6 +67,7 @@ def remove_directory(path):
 
 
 def execute_command():
+    current_tasks_array = CurrentTasksArray()
     print(current_tasks_array.get())
     tasks = current_tasks_array.get()
     for index, task in enumerate(tasks):
@@ -76,14 +77,14 @@ def execute_command():
             task["command"] = re.sub(r"(?m)^echo", "printf", task["command"])
         result = subprocess.run(task["command"], shell=True, capture_output=True)
         output = result.stdout.decode()
-        Terminal.instance().update_output(task["command"] + "\n")
+        Terminal().update_output(task["command"] + "\n")
         tasks[index]["output"] = output
-        Terminal.instance().update_output(output + "\n")
+        Terminal().update_output(output + "\n")
         tasks[index]["complete"] = True
-        Terminal.instance().update_output(f"Step {index+1} complete \n")
+        Terminal().update_output(f"Step {index+1} complete \n")
         current_tasks_array.set(tasks)
 
-    thinking.set(False)
-    work_mode.set(False)
+    Thinking().set(False)
+    WorkMode().set(False)
     play_sound("complete")
     current_tasks_array.set([])

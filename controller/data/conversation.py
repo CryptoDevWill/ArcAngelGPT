@@ -1,5 +1,7 @@
 import os
 from dotenv import load_dotenv
+
+from base import Instance
 from controller.data.global_variables import username
 from controller.utils.get_current_time_date import get_current_time_date
 import sys
@@ -12,18 +14,9 @@ f"You are ChatGPT-Json. For each input from the user, create a json that describ
 )}
 
 
-class Conversation:
-    _instance = None
-
-    @classmethod
-    def instance(cls):
-        if cls._instance is None:
-            cls._instance = cls()
-        return cls._instance
+class Conversation(metaclass=Instance):
 
     def __init__(self):
-        if Conversation._instance is not None:
-            raise RuntimeError("Only one instance of Conversation is allowed.")
         self.chat = [initial_system_prompt]
 
     def __getitem__(self, item):

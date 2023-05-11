@@ -1,5 +1,5 @@
 import tkinter as tk
-from controller.data.global_variables import thinking
+from controller.data.global_variables import Thinking
 
 class ThinkingIndicator(tk.Label):
     def __init__(self, master=None, bg=None, fg=None, **kwargs):
@@ -26,7 +26,7 @@ class ThinkingIndicator(tk.Label):
             self.after_id = self.after(500, self.update_dots)
 
     def check_thinking(self):
-        global thinking
+        thinking = Thinking()
         current_thinking = thinking.get()
         if current_thinking != self.thinking:
             self.set_thinking(current_thinking)
