@@ -37,19 +37,17 @@ def parse_command(response: str):
         work_mode.set(False)
         return
     process = []
-    print(data)
+    Terminal.update_output(data + "\n")
     if "commands" in data:
         if "answer" in data['commands'][0]:
             answer = data['commands'][0]['answer']
-            print(answer)
             Terminal().update_output(answer + "\n")
             conversation = Conversation()
             conversation.append({"role": "assistant", "content": answer})
             ChatWindow().update_conversation()
             work_mode.set(False)
             return
-        if "command" in data:
-            print(data["command"])
+        if "command" in data['commands'][0]:
             commands = data["commands"]
             command_dicts = [{"step": f"Step {i+1}: {command['description']}", "command": command['command'], "complete": False} for i, command in enumerate(commands)]        
             for command_dict in command_dicts:
