@@ -10,17 +10,7 @@ class ArcAngelGPT:
         show_loading_screen(self.window)
         GUI(self.window)
         Menu(self.window)
-
-        running = True
-
-        def toggle_running():
-            nonlocal running
-            running = False
-
-        self.window.protocol("WM_DELETE_WINDOW", lambda: toggle_running())
-        while running:
-            self.window.update()
-
+        self.window.mainloop()
 
 if __name__ == '__main__':
     app = ArcAngelGPT()
