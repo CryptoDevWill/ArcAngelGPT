@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
-from controller.data.conversation import conversation
+from controller.data.conversation import Conversation
 from controller.play_sound import play_sound
 from controller.data.global_variables import read_mode, work_mode, thinking
 from model.file_uploads.process_chunks import process_chunks
@@ -45,6 +45,7 @@ def upload_button(parent):
     read_mode.set_callback(lambda: update_clear_button(parent.clear_button))
 
 def upload_response(user_input, chat_window):
+    conversation = Conversation.instance()
     content = read_mode.content
     read_mode.set(False)
     work_mode.set(True)

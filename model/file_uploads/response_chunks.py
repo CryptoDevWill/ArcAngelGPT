@@ -1,13 +1,14 @@
 import os
 import openai
 import traceback
-from controller.data.conversation import conversation
+from controller.data.conversation import Conversation
 from controller.play_sound import play_sound
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def response_chunks(chunks, chat_window):
     print('its moving main')
+    conversation = Conversation.instance()
     try:
         combined_response = ""
         total_chunks = len(chunks)

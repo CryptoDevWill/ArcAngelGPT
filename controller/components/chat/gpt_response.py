@@ -1,5 +1,5 @@
 import tkinter as tk
-from controller.data.conversation import conversation
+from controller.data.conversation import Conversation
 from controller.data.global_variables import thinking
 from controller.play_sound import play_sound
 from controller.tools.parse_command import parse_command
@@ -13,6 +13,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def gpt_response(user_input, chat_window):
+    conversation = Conversation.instance()
     try:
         thinking.set(True)
         conversation_length = len(conversation)
@@ -30,7 +31,7 @@ def gpt_response(user_input, chat_window):
                                 f"}}"
                                 f"Do not use more than one json response in a single message."
                                 )})
-        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
+        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation.get())
         conversation.pop(conversation_length)
         chat_response = completion.choices[0].message
         conversation.append({"role": "assistant", "content": chat_response.content})

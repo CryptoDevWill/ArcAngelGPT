@@ -1,6 +1,6 @@
 import os
 import openai
-from controller.data.conversation import conversation
+from controller.data.conversation import Conversation
 from controller.play_sound import play_sound
 from controller.speak import speak
 from controller.data.global_variables import loading
@@ -12,11 +12,11 @@ def _init(chat_window):
     openai.api_key = os.environ.get("OPENAI_API_KEY")
     completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=conversation
+            messages=Conversation.instance().get()
     )
     response = completion.choices[0].message.content
     print(response)
-    conversation.append({"role": "assistant", "content": response})
+    Conversation.instance().append({"role": "assistant", "content": response})
     chat_window.update_conversation()
     play_sound("response")
 #     speak(response)

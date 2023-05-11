@@ -1,5 +1,5 @@
 import tkinter as tk
-from controller.data.conversation import conversation
+from controller.data.conversation import Conversation
 
 class ChatWindow(tk.Frame):
     def __init__(self, master=None, **kwargs):
@@ -40,12 +40,11 @@ class ChatWindow(tk.Frame):
         pass
 
     def update_conversation(self):
-        global conversation
         self.conversation_text.config(state=tk.NORMAL)
         self.conversation_text.delete(1.0, tk.END)
         self.conversation_text.configure(bg='#1e1e1e')
 
-        for msg in conversation[1:]:
+        for msg in Conversation.instance()[1:]:
             role = msg['role']
             if role == 'system':
                 continue

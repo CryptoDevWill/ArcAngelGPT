@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from controller.data.conversation import conversation
+from controller.data.conversation import Conversation
 from controller.data.global_variables import thinking
 from controller.play_sound import play_sound
 from controller.utils.token_counter import get_tokenz
@@ -9,6 +9,7 @@ import re
 
 
 def web_scrape(url, user_input, chat_window):
+    conversation = Conversation.instance()
     if not url.startswith("http://") and not url.startswith("https://"):
         # Try with http://
         http_url = "http://" + url
@@ -37,7 +38,7 @@ def web_scrape(url, user_input, chat_window):
                 # Preprocess text to remove unnecessary whitespace
                 text = re.sub(r'\s+', ' ', text).strip()
 
-                get_tokenz(text, conversation, chat_window, thinking, play_sound)
+                get_tokenz(text, conversation.get(), chat_window, thinking, play_sound)
                 conversation.append({"role": "assistant", "content": "Browsing the link now. please wait.."})
                 chat_window.update_conversation()
                 play_sound('response')
@@ -89,6 +90,7 @@ def web_scrape(url, user_input, chat_window):
    
 #Send web text to chatgpt
 def gpt_webscrape_response(url, user_input, text, chat_window):
+    conversation = Conversation.instance()
     thinking.set(True)
     try:
         prompt = f"{user_input}. This is the url {url} and this is the content -> '{text}'"

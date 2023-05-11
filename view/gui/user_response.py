@@ -1,5 +1,5 @@
 import tkinter as tk
-from controller.data.conversation import conversation
+from controller.data.conversation import Conversation
 from controller.data.global_variables import thinking
 from controller.play_sound import play_sound
 from controller.components.chat.gpt_response import gpt_response
@@ -35,6 +35,7 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         
 
     def user_response(self, event=None):  # Added event parameter with a default value of None
+        conversation = Conversation.instance()
         user_input = self.user_input_field.user_input.get()
         url_input = self.url_input_field.url_input.get()
 
