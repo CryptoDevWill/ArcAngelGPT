@@ -49,6 +49,7 @@ Here's a list of the main contributors to this project, along with their profile
   </tr>
 </table>
 
+
 Thank you to everyone who has contributed to this project!
 
 ## Getting Started
