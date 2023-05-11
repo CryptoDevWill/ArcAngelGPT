@@ -1,5 +1,6 @@
 import re
 import os
+import json
 
 from view.gui.chat_window.current_steps import current_tasks_array
 from controller.data.global_variables import thinking, work_mode
@@ -9,49 +10,19 @@ from view.gui.terminal_window.terminal import Terminal
 
 
 def parse_command(response: str):
-    if '```' not in response:
-        print("No commands found.")
-        return
     work_mode.set(True)
-
-    allowed_commands = ["mkdir", "touch", "echo", "mv", "rm"]
-
-    pattern = r'```(.*?)```'
-    command_blocks = re.findall(pattern, response, re.DOTALL)
-
+    find_json = re.search(r'{(.*?)}', response, re.DOTALL)
     commands = []
-    for block in command_blocks:
-        block_commands = block.strip().split('\n')
-        for cmd in block_commands:
-            cmd = cmd.strip()
-            if '&&' in cmd:
-                chained_commands = cmd.split('&&')
-                for chained_cmd in chained_commands:
-                    chained_cmd = chained_cmd.strip()
-                    cmd_parts = re.split(r'\s+', chained_cmd, maxsplit=1)
-                    cmd_base = cmd_parts[0]
-                    if any(cmd_base == allowed_cmd for allowed_cmd in allowed_commands):
-                        commands.append(chained_cmd)
-                    else:
-                        print(f"Error: '{cmd_base}' command is not allowed.")
-                        play_sound('error')
-                        work_mode.set(False)
-                        return
-            else:
-                cmd_parts = re.split(r'\s+', cmd, maxsplit=1)
-                cmd_base = cmd_parts[0]
-                if any(cmd_base == allowed_cmd for allowed_cmd in allowed_commands):
-                    commands.append(cmd)
-                else:
-                    print(f"Error: '{cmd_base}' command is not allowed.")
-                    play_sound('error')
-                    work_mode.set(False)
-                    return
-
-    command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(commands)]
-    current_tasks_array.set(command_dicts)
-    print(current_tasks_array.get())
-    execute_command()
+    if find_json:
+        data = json.loads(find_json.group(0)) # use .group(0) to get the matched string
+        print(data)
+        if "command" in data:
+            os.system(data["command"])
+        if "commands" in data:
+            for command in data["commands"]:
+                os.system(command["command"]) # use command["command"] to execute each command
+    else:
+        return
 
 
 

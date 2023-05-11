@@ -17,10 +17,7 @@ def gpt_response(user_input, chat_window):
         thinking.set(True)
         conversation_length = len(conversation)
         conversation.append({"role": "system", "content": (
-                                f"Your file tree is {get_file_tree()}. For each interaction, provide a single command or instruction. "
-                                "The AI will respond with one non-interactive terminal command per request, enclosed in triple backticks ``` for clarity. "
-                                "Commands will be executable in a terminal session without requiring any additional explanation or input. "
-                                "The AI will act as a computer providing terminal commands only, without any advice or notes. "
+                                f"Your file tree is {get_file_tree()}. The Operating system is {os.name}."
                                 )})
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation)
         conversation.pop(conversation_length)
