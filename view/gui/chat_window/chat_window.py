@@ -5,7 +5,7 @@ class ChatWindow(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 
-        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', selectforeground='yellow', selectbackground='red', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD, exportselection=True)
+        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', selectforeground='green', selectbackground='red', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD, exportselection=True)
         self.conversation_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.conversation_text.config(state=tk.DISABLED)
 

@@ -2,11 +2,13 @@ import re
 import os
 import json
 import subprocess
+from view.gui.chat_window.chat_window import ChatWindow
 
 from view.gui.chat_window.current_steps import current_tasks_array
 from controller.data.global_variables import thinking, work_mode
 from controller.play_sound import play_sound
 from view.gui.terminal_window.terminal import Terminal
+from controller.data.conversation import Conversation
 
 
 
@@ -36,12 +38,21 @@ def parse_command(response: str):
         return
     process = []
     if "commands" in data:
-        commands = data["commands"]
-        command_dicts = [{"step": f"Step {i+1}: {command['description']}", "command": command['command'], "complete": False} for i, command in enumerate(commands)]        
-        for command_dict in command_dicts:
-            process.append(command_dict["command"])
-        current_tasks_array.set(command_dicts)
-        execute_command()
+        if "answer" in data:
+            answer = data["answer"]
+            Terminal.instance().update_output(answer + "\n")
+            conversation = Conversation.instance()
+            conversation.append({"role": "assistant", "content": answer})
+            ChatWindow.update_conversation()
+            work_mode.set(False)
+            return
+        if "command" in data:
+            commands = data["commands"]
+            command_dicts = [{"step": f"Step {i+1}: {command['description']}", "command": command['command'], "complete": False} for i, command in enumerate(commands)]        
+            for command_dict in command_dicts:
+                process.append(command_dict["command"])
+            current_tasks_array.set(command_dicts)
+            execute_command()
     work_mode.set(False)
 
 
@@ -67,7 +78,7 @@ def execute_command():
         output = result.stdout.decode()
         Terminal.instance().update_output(task["command"] + "\n")
         tasks[index]["output"] = output
-        Terminal.instance().update_output(output)
+        Terminal.instance().update_output(output + "\n")
         tasks[index]["complete"] = True
         Terminal.instance().update_output(f"Step {index+1} complete \n")
         current_tasks_array.set(tasks)

@@ -18,13 +18,16 @@ def gpt_response(user_input, chat_window):
         thinking.set(True)
         conversation_length = len(conversation)
         conversation.append({"role": "system", "content": (
-                                f"Your file tree is {get_file_tree()}. The Operating system is {os.name}, so please only include commands that are compatible with my OS.\n"
-                                f"You will not get any terminal input from a user for any command."
-                                f"You must use the following structure:\n"
+                                f"Your file tree is {get_file_tree()}. The Operating system is {os.name}, "
+                                f"so please only include commands that are compatible with my OS.\n"
+                                f"The user should not be expected to use STDIN or STDOUT.\n"
+                                f"If it is simple you can just use answer, but if a command is needed, use command.\n"
+                                f"You must use the following structure, using command or answer:\n"
                                 f"{{\n"
                                 f"    \"commands\": [\n"
                                 f"        {{\n"
                                 f"            \"command\": \"command to execute\",\n"
+                                f"            \"answer\": \"answer to a question, or no json possible\"\n"
                                 f"            \"description\": \"description of command\"\n"
                                 f"        }}\n"
                                 f"    ],\n"
