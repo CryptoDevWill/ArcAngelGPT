@@ -37,7 +37,7 @@ def parse_command(response: str):
         work_mode.set(False)
         return
     process = []
-    Terminal.update_output(data)
+    Terminal().update_output(data)
     if "commands" in data:
         if "answer" in data['commands'][0]:
             answer = data['commands'][0]['answer']
