@@ -1,6 +1,7 @@
 import re
 import os
 import json
+import subprocess
 
 from view.gui.chat_window.current_steps import current_tasks_array
 from controller.data.global_variables import thinking, work_mode
@@ -33,13 +34,16 @@ def parse_command(response: str):
         print(f"Error: failed to parse JSON in response: {response}")
         work_mode.set(False)
         return
-
+    process = []
     if "commands" in data:
         commands = data["commands"]
-        for command in commands:
-            if "command" in command:
-                os.system(command["command"])
+        command_dicts = [{"step": f"Step {i+1}: {command['description']}", "command": command['command'], "complete": False} for i, command in enumerate(commands)]        
+        for command_dict in command_dicts:
+            process.append(command_dict["command"])
+        current_tasks_array.set(command_dicts)
+        execute_command()
     work_mode.set(False)
+
 
 def remove_directory(path):
     for item in os.listdir(path):
@@ -52,51 +56,15 @@ def remove_directory(path):
 
 
 def execute_command():
+    print(current_tasks_array.get())
     tasks = current_tasks_array.get()
     for index, task in enumerate(tasks):
         command_parts = task["command"].split(' ')
-        command, args = command_parts[0], command_parts[1:]
-
-        try:
-            if command == "mkdir":
-                os.mkdir(args[0])
-            elif command == "touch":
-                with open(args[0], 'a'):
-                    os.utime(args[0], None)
-            elif command == "echo":
-                if ">>" in args:
-                    target_file = args[args.index(">>") + 1]
-                    content = " ".join(args[:args.index(">>")])
-                    with open(target_file, 'a') as file:
-                        file.write(f"{content}\n")
-                elif ">" in args:
-                    target_file = args[args.index(">") + 1]
-                    content = " ".join(args[:args.index(">")])
-                    with open(target_file, 'w') as file:
-                        file.write(f"{content}\n")
-                else:
-                    print(" ".join(args))
-            elif command == "mv":
-                destination = args[1] if not os.path.isdir(args[1]) else os.path.join(args[1], os.path.basename(args[0]))
-                os.rename(args[0], destination)
-            elif command == "rm":
-                if "-rf" in args:
-                    target_path = args[args.index("-rf") + 1]
-                    if os.path.isdir(target_path):
-                        remove_directory(target_path)
-                    else:
-                        print(f"Error: {target_path} is not a directory")
-                elif "-r" in args:
-                    target_path = args[args.index("-r") + 1]
-                    if os.path.isdir(target_path):
-                        remove_directory(target_path)
-                    else:
-                        print(f"Error: {target_path} is not a directory")
-                else:
-                    os.remove(args[0])
-        except Exception as e:
-            print(f"Error: {e}")
-
+        command = command_parts[0]
+        result = subprocess.run(task["command"], shell=True, capture_output=True)
+        output = result.stdout.decode()
+        tasks[index]["output"] = output
+        Terminal.instance().update_output(output)
         tasks[index]["complete"] = True
         current_tasks_array.set(tasks)
 
