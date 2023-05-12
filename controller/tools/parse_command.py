@@ -16,11 +16,15 @@ def parse_command(response: str):
     work_mode.set(True)
     start_delim = '{'
     end_delim = '}'
+    conversation = Conversation()
     try:
         start_index = response.index(start_delim)
         end_index = response.rindex(end_delim) + len(end_delim)
     except ValueError:
         print(f"Error: could not find start or end delimiter in response: {response}")
+        Terminal().update_output("Warning: could not find start or end delimiter in response. \n")
+        conversation.append({"role": "assistant", "content": response})
+        ChatWindow().update_conversation()
         work_mode.set(False)
         return
 
@@ -41,8 +45,7 @@ def parse_command(response: str):
     if "commands" in data:
         if "answer" in data['commands'][0]:
             answer = data['commands'][0]['answer']
-            Terminal().update_output(answer + "\n")
-            conversation = Conversation()
+            Terminal().update_output(answer)
             conversation.append({"role": "assistant", "content": answer})
             ChatWindow().update_conversation()
             work_mode.set(False)
@@ -52,6 +55,7 @@ def parse_command(response: str):
             command_dicts = [{"step": f"Step {i+1}: {command['description']}", "command": command['command'], "complete": False} for i, command in enumerate(commands)]        
             for command_dict in command_dicts:
                 process.append(command_dict["command"])
+                conversation.append({"role": "assistant", "content": command_dict["step"]})
             CurrentTasksArray().set(command_dicts)
             execute_command()
     work_mode.set(False)
@@ -68,6 +72,7 @@ def remove_directory(path):
 
 
 def execute_command():
+    conversation = Conversation()
     current_tasks_array = CurrentTasksArray()
     print(current_tasks_array.get())
     tasks = current_tasks_array.get()
@@ -84,7 +89,8 @@ def execute_command():
         tasks[index]["complete"] = True
         Terminal().update_output(f"Step {index+1} complete \n")
         current_tasks_array.set(tasks)
-
+    conversation.append({"role": "assistant", "content": "All steps complete"})
+    ChatWindow().update_conversation()
     Thinking().set(False)
     WorkMode().set(False)
     play_sound("complete")

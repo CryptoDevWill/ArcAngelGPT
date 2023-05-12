@@ -37,7 +37,7 @@ def gpt_response(user_input, chat_window):
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=conversation.get())
         conversation.pop(conversation_length)
         chat_response = completion.choices[0].message
-        conversation.append({"role": "assistant", "content": chat_response.content})
+        #conversation.append({"role": "assistant", "content": chat_response.content})
         if chat_response:
             command = threading.Thread(target=parse_command, args=(chat_response.content,))
             command.start()
@@ -51,7 +51,7 @@ def gpt_response(user_input, chat_window):
         conversation.append({"role": "assistant", "content": error_message})
         Thinking().set(False)
     finally:
-        #chat_window.update_conversation()
+        chat_window.update_conversation()
         play_sound("response")
         Thinking().set(False)
 
