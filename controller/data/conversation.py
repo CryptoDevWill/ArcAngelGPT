@@ -60,3 +60,5 @@ class Conversation(metaclass=Instance):
         if len(self) > 1:
             return self.pop(-1)
         return None
+
+Conversation()
