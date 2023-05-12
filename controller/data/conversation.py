@@ -1,10 +1,7 @@
-import os
 from dotenv import load_dotenv
 
 from base import Instance
-from controller.data.global_variables import username
-from controller.utils.get_current_time_date import get_current_time_date
-import sys
+from controller.utils import get_current_time_date
 load_dotenv()
 
 time, date = get_current_time_date()

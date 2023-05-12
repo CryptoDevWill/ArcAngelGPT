@@ -5,10 +5,9 @@ import subprocess
 from view.gui.chat_window.chat_window import ChatWindow
 
 from view.gui.chat_window.current_steps import CurrentTasksArray
-from controller.data.global_variables import WorkMode, Thinking
+from controller import WorkMode, Thinking, Conversation
 from controller.play_sound import play_sound
-from view.gui.terminal_window.terminal import Terminal
-from controller.data.conversation import Conversation
+from view.gui.terminal_window import Terminal
 
 
 def parse_command(response: str):

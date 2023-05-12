@@ -2,8 +2,8 @@ import tkinter as tk
 from controller.data.conversation import Conversation
 from controller.data.global_variables import Thinking
 from controller.play_sound import play_sound
-from controller.tools.parse_command import parse_command
-from controller.components.file_tree.get_file_tree import get_file_tree
+from controller.tools import parse_command
+from controller.components.file_tree import get_file_tree
 import threading
 import os
 import openai
