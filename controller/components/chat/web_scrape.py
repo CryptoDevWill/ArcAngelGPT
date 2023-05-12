@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 from controller.data.conversation import Conversation
-from controller.data.global_variables import Thinking
+from controller import Thinking
 from controller.play_sound import play_sound
-from controller.utils.token_counter import get_tokenz
+from controller.utils import get_tokenz
 import openai
 import re
 
