@@ -1,10 +1,14 @@
 import tkinter as tk
 
+from base import Instance
+
+
 class TaskObserver:
     def update(self):
         pass
 
-class CurrentTasksArray:
+
+class CurrentTasksArray(metaclass=Instance):
     def __init__(self):
         self.value = []
         self.observers = []
@@ -25,7 +29,6 @@ class CurrentTasksArray:
             raise TypeError("Observer must be an instance of TaskObserver")
         self.observers.append(observer)
 
-current_tasks_array = CurrentTasksArray()
 
 class StepsBox(tk.LabelFrame, TaskObserver):
     def __init__(self, parent):
@@ -33,13 +36,13 @@ class StepsBox(tk.LabelFrame, TaskObserver):
         TaskObserver.__init__(self)
         self.parent = parent
         self.update()
-        current_tasks_array.add_observer(self)
+        CurrentTasksArray().add_observer(self)
 
     def update(self):
         for widget in self.winfo_children():
             widget.destroy()
 
-        for index, step in enumerate(current_tasks_array.get()):
+        for index, step in enumerate(CurrentTasksArray().get()):
             step_text = step["step"]
             step_complete = step["complete"]
 

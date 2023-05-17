@@ -1,6 +1,5 @@
 import tkinter as tk
-from controller.data.conversation import conversation
-from controller.data.global_variables import thinking
+from controller.data.conversation import Conversation
 from controller.play_sound import play_sound
 from controller.components.chat.gpt_response import gpt_response
 from controller.components.chat.web_scrape import web_scrape
@@ -8,7 +7,7 @@ from view.gui.chat_window.url_input_module import UrlInput
 from view.gui.chat_window.user_input_module import UserInput
 from view.gui.chat_window.reset_button_module import ResetButtonModule
 from model.file_uploads.file_upload import upload_button, upload_response
-from controller.data.global_variables import read_mode
+from controller.data.global_variables import ReadMode, Thinking
 import threading
 
 
@@ -35,6 +34,7 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         
 
     def user_response(self, event=None):  # Added event parameter with a default value of None
+        conversation = Conversation()
         user_input = self.user_input_field.user_input.get()
         url_input = self.url_input_field.url_input.get()
 
@@ -46,7 +46,7 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
         play_sound('send')
 
         # Reject call if still thinking
-        if thinking.get():
+        if Thinking().get():
             conversation.append({"role": "user", "content": "I am thinking, please wait a moment.."})
             self.chat_window.update_conversation()
             play_sound('system')
@@ -58,7 +58,7 @@ class UserResponse(tk.Frame):  # Inherit from tk.Frame
             return print("Enter user input")
 
         # Read more
-        if read_mode.get():
+        if ReadMode().get():
             return threading.Thread(target=upload_response, args=(user_input, self.chat_window)).start()
 
         # Redirect to webscrape if url

@@ -1,16 +1,17 @@
 import tkinter as tk
-from controller.data.global_variables import work_mode
+from controller.data.global_variables import WorkMode
 from controller.play_sound import play_sound
+
 
 class WorkModeLabel(tk.Label):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
         self.update_label()
-        work_mode.set_callback(self.update_label)
+        WorkMode().set_callback(self.update_label)
         self.pack(fill="x", expand=True)
         
     def update_label(self):
-        if work_mode.get():
+        if WorkMode().get():
             self.config(text="Work Mode", bg="#007f00", fg="white")
             play_sound('work')
         else:

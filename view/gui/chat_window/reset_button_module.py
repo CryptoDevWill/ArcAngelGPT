@@ -1,17 +1,22 @@
 from tkinter import ttk, Frame
-from controller.data.conversation import conversation, initial_system_prompt
+from controller.data.conversation import Conversation
+
 
 def reset(chat_window):
     print("Reset button clicked!")
-    conversation.clear()
-    conversation.append(initial_system_prompt)
+    Conversation().reset()
+    # conversation.clear()
+    # conversation.append(initial_system_prompt)
     chat_window.update_conversation()
+
 
 def remove_latest_message(chat_window):
     print("Back button clicked!")
-    if len(conversation) > 1:
-        conversation.pop(-1)
+    # if len(conversation) > 1:
+    #     conversation.pop(-1)
+    if Conversation().undo():
         chat_window.update_conversation()
+
 
 class ResetButtonModule(Frame):
     def __init__(self, parent, chat_window):

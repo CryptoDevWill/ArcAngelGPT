@@ -5,11 +5,12 @@ from view.gui.terminal_window.terminal import Terminal  # Import the Terminal cl
 
 load_dotenv()
 
+
 class TerminalScreen:
     def __init__(self, master):
         self.frame = tk.Frame(master)
         self.frame.pack(fill='both', expand=True)
-        self.terminal = Terminal.instance(self.frame)  # Create a Terminal instance
+        self.terminal = Terminal(self.frame)  # Create a Terminal instance
 
     def show(self):
         self.frame.lift()

@@ -1,11 +1,14 @@
 import tkinter as tk
-from controller.data.conversation import conversation
 
-class ChatWindow(tk.Frame):
+from base import Instance
+from controller.data.conversation import Conversation
+
+
+class ChatWindow(tk.Frame, metaclass=Instance):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 
-        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', selectforeground='yellow', selectbackground='red', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD, exportselection=True)
+        self.conversation_text = tk.Text(self, bg='#1e1e1e', fg='white', selectforeground='green', selectbackground='red', highlightthickness=0, width=80, height=20, font=('Arial', 14), wrap=tk.WORD, exportselection=True)
         self.conversation_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.conversation_text.config(state=tk.DISABLED)
 
@@ -40,12 +43,11 @@ class ChatWindow(tk.Frame):
         pass
 
     def update_conversation(self):
-        global conversation
         self.conversation_text.config(state=tk.NORMAL)
         self.conversation_text.delete(1.0, tk.END)
         self.conversation_text.configure(bg='#1e1e1e')
 
-        for msg in conversation[1:]:
+        for msg in Conversation()[1:]:
             role = msg['role']
             if role == 'system':
                 continue

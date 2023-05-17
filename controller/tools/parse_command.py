@@ -1,60 +1,63 @@
 import re
 import os
+import json
+import subprocess
+from view.gui.chat_window.chat_window import ChatWindow
 
-from view.gui.chat_window.current_steps import current_tasks_array
-from controller.data.global_variables import thinking, work_mode
+from view.gui.chat_window.current_steps import CurrentTasksArray
+from controller import WorkMode, Thinking, Conversation
 from controller.play_sound import play_sound
-from view.gui.terminal_window.terminal import Terminal
-
+from view.gui.terminal_window import Terminal
 
 
 def parse_command(response: str):
-    if '```' not in response:
-        print("No commands found.")
-        return
+    work_mode = WorkMode()
     work_mode.set(True)
+    start_delim = '{'
+    end_delim = '}'
+    conversation = Conversation()
+    try:
+        start_index = response.index(start_delim)
+        end_index = response.rindex(end_delim) + len(end_delim)
+    except ValueError:
+        print(f"Error: could not find start or end delimiter in response: {response}")
+        Terminal().update_output("Warning: could not find start or end delimiter in response. \n")
+        conversation.append({"role": "assistant", "content": response})
+        ChatWindow().update_conversation()
+        work_mode.set(False)
+        return
 
-    allowed_commands = ["mkdir", "touch", "echo", "mv", "rm"]
-
-    pattern = r'```(.*?)```'
-    command_blocks = re.findall(pattern, response, re.DOTALL)
-
-    commands = []
-    for block in command_blocks:
-        block_commands = block.strip().split('\n')
-        for cmd in block_commands:
-            cmd = cmd.strip()
-            if '&&' in cmd:
-                chained_commands = cmd.split('&&')
-                for chained_cmd in chained_commands:
-                    chained_cmd = chained_cmd.strip()
-                    cmd_parts = re.split(r'\s+', chained_cmd, maxsplit=1)
-                    cmd_base = cmd_parts[0]
-                    if any(cmd_base == allowed_cmd for allowed_cmd in allowed_commands):
-                        commands.append(chained_cmd)
-                    else:
-                        print(f"Error: '{cmd_base}' command is not allowed.")
-                        play_sound('error')
-                        work_mode.set(False)
-                        return
-            else:
-                cmd_parts = re.split(r'\s+', cmd, maxsplit=1)
-                cmd_base = cmd_parts[0]
-                if any(cmd_base == allowed_cmd for allowed_cmd in allowed_commands):
-                    commands.append(cmd)
-                else:
-                    print(f"Error: '{cmd_base}' command is not allowed.")
-                    play_sound('error')
-                    work_mode.set(False)
-                    return
-
-    command_dicts = [{"step": f"Step {i+1}: {cmd}", "command": cmd, "complete": False} for i, cmd in enumerate(commands)]
-    current_tasks_array.set(command_dicts)
-    print(current_tasks_array.get())
-    execute_command()
-
-
-
+    json_str = response[start_index:end_index]
+    if not json_str:
+        print(f"Error: extracted JSON string is empty in response: {response}")
+        work_mode.set(False)
+        return
+    
+    try:
+        data = json.loads(json_str)
+    except json.JSONDecodeError:
+        print(f"Error: failed to parse JSON in response: {response}")
+        work_mode.set(False)
+        return
+    process = []
+    Terminal().update_output(data)
+    if "commands" in data:
+        if "answer" in data['commands'][0]:
+            answer = data['commands'][0]['answer']
+            Terminal().update_output(answer)
+            conversation.append({"role": "assistant", "content": answer})
+            ChatWindow().update_conversation()
+            work_mode.set(False)
+            return
+        if "command" in data['commands'][0]:
+            commands = data["commands"]
+            command_dicts = [{"step": f"Step {i+1}: {command['description']}", "command": command['command'], "complete": False} for i, command in enumerate(commands)]        
+            for command_dict in command_dicts:
+                process.append(command_dict["command"])
+                conversation.append({"role": "assistant", "content": command_dict["step"]})
+            CurrentTasksArray().set(command_dicts)
+            execute_command()
+    work_mode.set(False)
 
 
 def remove_directory(path):
@@ -68,55 +71,26 @@ def remove_directory(path):
 
 
 def execute_command():
+    conversation = Conversation()
+    current_tasks_array = CurrentTasksArray()
+    print(current_tasks_array.get())
     tasks = current_tasks_array.get()
     for index, task in enumerate(tasks):
         command_parts = task["command"].split(' ')
-        command, args = command_parts[0], command_parts[1:]
-
-        try:
-            if command == "mkdir":
-                os.mkdir(args[0])
-            elif command == "touch":
-                with open(args[0], 'a'):
-                    os.utime(args[0], None)
-            elif command == "echo":
-                if ">>" in args:
-                    target_file = args[args.index(">>") + 1]
-                    content = " ".join(args[:args.index(">>")])
-                    with open(target_file, 'a') as file:
-                        file.write(f"{content}\n")
-                elif ">" in args:
-                    target_file = args[args.index(">") + 1]
-                    content = " ".join(args[:args.index(">")])
-                    with open(target_file, 'w') as file:
-                        file.write(f"{content}\n")
-                else:
-                    print(" ".join(args))
-            elif command == "mv":
-                destination = args[1] if not os.path.isdir(args[1]) else os.path.join(args[1], os.path.basename(args[0]))
-                os.rename(args[0], destination)
-            elif command == "rm":
-                if "-rf" in args:
-                    target_path = args[args.index("-rf") + 1]
-                    if os.path.isdir(target_path):
-                        remove_directory(target_path)
-                    else:
-                        print(f"Error: {target_path} is not a directory")
-                elif "-r" in args:
-                    target_path = args[args.index("-r") + 1]
-                    if os.path.isdir(target_path):
-                        remove_directory(target_path)
-                    else:
-                        print(f"Error: {target_path} is not a directory")
-                else:
-                    os.remove(args[0])
-        except Exception as e:
-            print(f"Error: {e}")
-
+        #attempt to fix stupid newlines in windows.
+        if command_parts[0] == "echo":
+            task["command"] = re.sub(r"(?m)^echo", "printf", task["command"])
+        result = subprocess.run(task["command"], shell=True, capture_output=True)
+        output = result.stdout.decode()
+        Terminal().update_output(task["command"] + "\n")
+        tasks[index]["output"] = output
+        Terminal().update_output(output + "\n")
         tasks[index]["complete"] = True
+        Terminal().update_output(f"Step {index+1} complete \n")
         current_tasks_array.set(tasks)
-
-    thinking.set(False)
-    work_mode.set(False)
+    conversation.append({"role": "assistant", "content": "All steps complete"})
+    ChatWindow().update_conversation()
+    Thinking().set(False)
+    WorkMode().set(False)
     play_sound("complete")
     current_tasks_array.set([])
